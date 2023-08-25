@@ -74,9 +74,9 @@ class AjaxController extends Controller
             'Selected_Date' => date('Y-m-d', strtotime($data->DeadLine)),
             'Selected_Time' => $data->DeadLine_Time,
             'Selected_Writer' => $data->assign_id,
-            'Selected_Words' => (double)Str::replace(['$ ', ','], "", $data->Assign_Words),
-            'Selected_Total_Words' => (double)Str::replace(['$ ', ','], "", $data->Total_Words),
-            'Selected_Due_Words' => (double)Str::replace(['$ ', ','], "", $data->Due_Words),
+            'Selected_Words' => (float)Str::replace(['$ ', ','], "", $data->Assign_Words),
+            'Selected_Total_Words' => (float)Str::replace(['$ ', ','], "", $data->Total_Words),
+            'Selected_Due_Words' => (float)Str::replace(['$ ', ','], "", $data->Due_Words),
         ];
     }
 
@@ -89,11 +89,11 @@ class AjaxController extends Controller
                 'content_info'
             ])->first();
         $WordCount = 0;
-        if (isset($data->basic_info->Word_Count)){
-            $WordCount = (double)Str::replace(['$ ', ','], "", $data->basic_info->Word_Count);
+        if (isset($data->basic_info->Word_Count)) {
+            $WordCount = (float)Str::replace(['$ ', ','], "", $data->basic_info->Word_Count);
         }
-        if (isset($data->content_info->Word_Count)){
-            $WordCount = (double)Str::replace(['$ ', ','], "", $data->content_info->Word_Count);
+        if (isset($data->content_info->Word_Count)) {
+            $WordCount = (float)Str::replace(['$ ', ','], "", $data->content_info->Word_Count);
         }
         return [
             'Selected_Date' => date('Y-m-d', strtotime($data->submission_info->DeadLine)),
@@ -135,9 +135,9 @@ class AjaxController extends Controller
                     ]);
                 }
             }
-//            event(new NotificationCreated($request->order_id));
+            //            event(new NotificationCreated($request->order_id));
             $authUser = Auth::guard('Authorized')->user();
-            $message = $Order_Info->Order_ID. '. This Order have new Chat Message!';
+            $message = $Order_Info->Order_ID . '. This Order have new Chat Message!';
             PortalHelpers::sendNotification(null, $Order_Info->Order_ID, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 9, 10, 11]);
             return response()->json(['message' => 'Message Sent.']);
         }
@@ -234,18 +234,22 @@ class AjaxController extends Controller
                         }
                     ]);
                 });
-        } elseif ($Role_ID === 4 || $Role_ID === 5) {
+        } elseif ($Role_ID === 4) {
+            $query->whereHas('authorized_user', function ($q) {
+                $q->whereIn('Role_ID', [1, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // Updated Role_IDs
+            });
+        } elseif ($Role_ID === 5) {
             $query->whereHas('authorized_user', function ($q) {
                 $q->whereIn('Role_ID', [1, 4, 5, 6, 7, 9, 10, 11]);
             })->where('is_executive', 0);
         } elseif ($Role_ID === 9 || $Role_ID === 10 || $Role_ID === 11) {
             $query->whereHas('authorized_user', function ($q) {
                 $q->whereIn('Role_ID', [1, 4, 5, 7, 8, 9, 10, 11, 12]);
-            })->whereIn('is_executive', [1, 0]);
+            })->whereIn('is_executive', [0, 1]);
         } elseif ($Role_ID === 12 || $Role_ID === 8) {
             $query->whereHas('authorized_user', function ($q) {
                 $q->whereIn('Role_ID', [1, 4, 8, 9, 10, 11, 12]);
-            })->whereIn('is_executive', [1, 0])
+            })->whereIn('is_executive', [0, 1])
                 ->whereHas('order_info', function ($q) {
                     $q->with([
                         'tasks' => function ($q) {

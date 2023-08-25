@@ -232,8 +232,10 @@ class PortalHelpers
     {
         $client = new Client();
         try {
+
             $response = $client->get('https://api.ipify.org');
             return $response->getBody()->getContents();
+            
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $statusCode = $e->getResponse()->getStatusCode();

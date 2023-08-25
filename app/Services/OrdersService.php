@@ -108,8 +108,8 @@ class OrdersService
                         'client_id' => $client_id
                     ]);
 
-                    if (isset($request->DeadLines)){
-                        foreach ($request->DeadLines as $DeadLine){
+                    if (isset($request->DeadLines)) {
+                        foreach ($request->DeadLines as $DeadLine) {
                             ResearchOrderSubmissionDeadline::create([
                                 'DeadLines' => $DeadLine,
                                 'is_Submit' => 0,
@@ -290,8 +290,8 @@ class OrdersService
     {
         try {
             $authUser = Auth::guard('Authorized')->user();
-            $message = $Order_Info->Order_ID. ' Order has been Created!';
-            PortalHelpers::sendNotification(null, $Order_Info->Order_ID, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 9, 10, 11]);
+            $message = $Order_Info->Order_ID . ' Order has been Created!';
+            PortalHelpers::sendNotification(null, $Order_Info->Order_ID, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 9, 10, 11]);//Add 9 role id because of noticition not show in rolec 9
 
             DB::commit();
             if ((int)$Order_Type === 1) {
@@ -304,14 +304,14 @@ class OrdersService
         }
     }
 
-//    public function getNewOrderID(): string
-//    {
-//        $lastOrder = OrderInfo::withTrashed()->orderBy('id', 'DESC')->first();
-//        $curDate = Carbon::now()->isoFormat('MM-YYYY');
-//
-//        $lastOrderId = $lastOrder->id ?? 0;
-//        return 'OC-' . $curDate . '-' . str_pad($lastOrderId + 1, 3, '0', STR_PAD_LEFT);
-//    }
+    //    public function getNewOrderID(): string
+    //    {
+    //        $lastOrder = OrderInfo::withTrashed()->orderBy('id', 'DESC')->first();
+    //        $curDate = Carbon::now()->isoFormat('MM-YYYY');
+    //
+    //        $lastOrderId = $lastOrder->id ?? 0;
+    //        return 'OC-' . $curDate . '-' . str_pad($lastOrderId + 1, 3, '0', STR_PAD_LEFT);
+    //    }
 
     public function getNewOrderID(): string
     {
@@ -357,38 +357,38 @@ class OrdersService
 
             $OrderBasicInfo = ((int)$request->Order_Type === 1) ?
                 OrderBasicInfo::where('order_id', $Order_ID)
-                    ->update([
-                        'Order_Services' => $request->Order_Services,
-                        'Education_Level' => $request->Education_Level,
-                        'Pages_Count' => PortalHelpers::getPageCount($request->Word_Count, $request->Spacing),
-                        'Word_Count' => $request->Word_Count,
-                        'Spacing' => $request->Spacing,
-                        'Citation_Style' => $request->Citation_Style,
-                        'Sources' => $request->Sources,
-                        'Order_Website' => $request->Order_Website,
-                        'Order_Status' => $request->Order_Status,
-                        'user_id' => $user_id
-                    ])
+                ->update([
+                    'Order_Services' => $request->Order_Services,
+                    'Education_Level' => $request->Education_Level,
+                    'Pages_Count' => PortalHelpers::getPageCount($request->Word_Count, $request->Spacing),
+                    'Word_Count' => $request->Word_Count,
+                    'Spacing' => $request->Spacing,
+                    'Citation_Style' => $request->Citation_Style,
+                    'Sources' => $request->Sources,
+                    'Order_Website' => $request->Order_Website,
+                    'Order_Status' => $request->Order_Status,
+                    'user_id' => $user_id
+                ])
                 :
                 ContentBasicInfo::where('order_id', $Order_ID)
-                    ->update([
-                        'Content_Title' => $request->Content_Title,
-                        'Industry_Name' => $request->Industry_Name,
-                        'Writing_Style' => $request->Writing_Style,
-                        'Preferred_Voice' => $request->Preferred_Voice,
-                        'Target_Audience' => $request->Target_Audience,
-                        'Target_Gender' => $request->Target_Gender,
-                        'Free_Image' => $request->Free_Image,
-                        'Generic_Type' => $request->Generic_Type,
-                        'Keywords' => $request->Keywords,
-                        'Meta_Description' => $request->Meta_Description,
-                        'Reference_Link' => $request->Reference_Link,
-                        'Order_Services' => $request->Order_Services,
-                        'Word_Count' => $request->Word_Count,
-                        'Order_Website' => $request->Order_Website,
-                        'Order_Status' => $request->Order_Status,
-                        'user_id' => $user_id
-                    ]);
+                ->update([
+                    'Content_Title' => $request->Content_Title,
+                    'Industry_Name' => $request->Industry_Name,
+                    'Writing_Style' => $request->Writing_Style,
+                    'Preferred_Voice' => $request->Preferred_Voice,
+                    'Target_Audience' => $request->Target_Audience,
+                    'Target_Gender' => $request->Target_Gender,
+                    'Free_Image' => $request->Free_Image,
+                    'Generic_Type' => $request->Generic_Type,
+                    'Keywords' => $request->Keywords,
+                    'Meta_Description' => $request->Meta_Description,
+                    'Reference_Link' => $request->Reference_Link,
+                    'Order_Services' => $request->Order_Services,
+                    'Word_Count' => $request->Word_Count,
+                    'Order_Website' => $request->Order_Website,
+                    'Order_Status' => $request->Order_Status,
+                    'user_id' => $user_id
+                ]);
 
             if (!$OrderBasicInfo) {
                 throw new RuntimeException("Order Info Error!");
@@ -561,9 +561,9 @@ class OrdersService
             }
 
             $Order_Task = OrderTask::create([
-                'Assign_Words' => (double)$request->Order_Words,
-                'Total_Words' => (double)$request->total_words,
-                'Due_Words' => (double)$request->Due_Words,
+                'Assign_Words' => (float)$request->Order_Words,
+                'Total_Words' => (float)$request->total_words,
+                'Due_Words' => (float)$request->Due_Words,
                 'DeadLine' => date('Y-m-d', strtotime($request->DeadLine)),
                 'DeadLine_Time' => $request->DeadLine_Time,
                 'Task_Status' => 0,
@@ -606,9 +606,9 @@ class OrdersService
         DB::beginTransaction();
         $Order_Task = OrderTask::where('id', $request->task_id)
             ->update([
-                'Assign_Words' => (double)$request->Order_Words,
-                'Total_Words' => (double)$request->total_words,
-                'Due_Words' => (double)$request->Due_Words,
+                'Assign_Words' => (float)$request->Order_Words,
+                'Total_Words' => (float)$request->total_words,
+                'Due_Words' => (float)$request->Due_Words,
                 'DeadLine' => date('Y-m-d', strtotime($request->DeadLine)),
                 'DeadLine_Time' => $request->DeadLine_Time,
                 'order_id' => $request->order_id,
@@ -649,7 +649,7 @@ class OrdersService
                 ]);
 
             if ($Order_Task) {
-                if ((int)$authUser->Role_ID === 7){
+                if ((int)$authUser->Role_ID === 7) {
                     foreach ($request->file('files') as $key => $file) {
                         $fileName = $file->getClientOriginalName();
                         $filePath = 'Uploads/Final-Attachments/' . $request->Order_ID . '/' . $fileName;
@@ -665,7 +665,7 @@ class OrdersService
                         $flag = true;
                     }
                 }
-                if ((int)$authUser->Role_ID !== 7){
+                if ((int)$authUser->Role_ID !== 7) {
                     foreach ($request->file('files') as $key => $ImageFile) {
                         $imageGalleryName = $ImageFile->getClientOriginalName();
                         $ImageFile->move(public_path('Uploads/Task-Attachments/' . $order_id . '/'), $imageGalleryName);
@@ -886,7 +886,7 @@ class OrdersService
      */
     private function OrderRevision(Request $request, $orderBasicInfo): RedirectResponse
     {
-        $additionalWords = (double)Str::replace(['$ ', ','], "", $orderBasicInfo->Word_Count) + (double)$request->Order_Words;
+        $additionalWords = (float)Str::replace(['$ ', ','], "", $orderBasicInfo->Word_Count) + (float)$request->Order_Words;
         $orderBasicInfo->update([
             'Word_Count' => $additionalWords,
             'Order_Status' => 3,
@@ -905,7 +905,7 @@ class OrdersService
             'revised_by' => $request->revised_by,
         ]);
 
-        if ($request->hasFile('files')){
+        if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $fileName = $file->getClientOriginalName();
                 $filePath = 'Uploads/Revision-Attachments/' . $request->Order_ID . '/' . $fileName;
@@ -922,7 +922,7 @@ class OrdersService
 
         $Order_Info = OrderInfo::where('Order_ID', $request->Order_ID)->firstOrFail();
         $authUser = Auth::guard('Authorized')->user();
-        $message = $request->Order_ID.' The Revision of Order has been Placed!';
+        $message = $request->Order_ID . ' The Revision of Order has been Placed!';
         PortalHelpers::sendNotification(null, $request->Order_ID, $message, $authUser->designation->Designation_Name, [(int)$Order_Info->assign_id], [1, 4, (int)$authUser->Role_ID, 9, 10, 11]);
 
         DB::commit();
@@ -971,7 +971,7 @@ class OrdersService
     private function handleUserStatistics(Request $request, int $status): void
     {
         $wordCount = OrderTask::where('id', $request->task_id)->firstOrFail();
-        $assignWords = (double)str_replace(['$ ', ','], '', $wordCount->Assign_Words);
+        $assignWords = (float)str_replace(['$ ', ','], '', $wordCount->Assign_Words);
 
         $userWordsStats = UserWordsStats::where('task_id', $request->task_id)->first();
 
@@ -991,7 +991,7 @@ class OrdersService
     {
         $wordCount = OrderInfo::where('id', $request->order_id)
             ->with('content_info')->firstOrFail();
-        $assignWords = (double)str_replace(['$ ', ','], '', $wordCount->content_info->Word_Count);
+        $assignWords = (float)str_replace(['$ ', ','], '', $wordCount->content_info->Word_Count);
 
         $userWordsStats = UserWordsStats::where('order_id', $request->order_id)->first();
 
@@ -1023,7 +1023,6 @@ class OrdersService
             UserWordsStats::where('id', $userWordsStats->id)
                 ->update($updateData);
         }
-
     }
 
     private function orderFinalSubmission(Request $request): void
@@ -1044,7 +1043,7 @@ class OrdersService
             ]);
         }
         $authUser = Auth::guard('Authorized')->user();
-        PortalHelpers::sendNotification(null, $request->Order_ID, 'The Order has been Submitted!', $authUser->designation->Designation_Name, [(int)$authUser->id], [1, 4, 5, 10, 11, 12]);
+        PortalHelpers::sendNotification(null, $request->Order_ID, 'The Order ' . $request->Order_ID . ' has been Submitted!', $authUser->designation->Designation_Name, [(int)$authUser->id], [1, 4, 5, 9, 10, 11, 12]);
     }
     // ======================= End Order Actions (Research & Content) ==========================
 
