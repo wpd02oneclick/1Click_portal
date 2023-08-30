@@ -1,0 +1,33 @@
+<?php
+header('Content-Type: application/json');
+
+// Assuming you have a database connection
+$conn = new mysqli('localhost', 'root', '', 'laravel');
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $sql = "SELECT id, name, password FROM users WHERE email = '$email'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['password'])) {
+            $response = ['status' => 'success', 'message' => 'Login successful', 'user_id' => $row['id']];
+        } else {
+            $response = ['status' => 'error', 'message' => 'Invalid credentials'];
+        }
+    } else {
+        $response = ['status' => 'error', 'message' => 'User not found'];
+    }
+
+    echo json_encode($response);
+}
+
+$conn->close();
+?>

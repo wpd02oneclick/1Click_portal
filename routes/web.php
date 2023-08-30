@@ -52,6 +52,7 @@ use App\Http\Livewire\Research\ResearchEditOrder;
 use App\Http\Livewire\Trash\ContentDeletedOrders;
 use App\Http\Livewire\Trash\DeletedUsers;
 use App\Http\Livewire\Trash\ResearchDeletedOrders;
+use App\Models\BasicModels\OrderServices;
 use App\Models\ErrorLog;
 use App\Services\ContentOrderService;
 use App\Services\CreateUpdatePortalPermissions;
@@ -101,6 +102,11 @@ Route::get('/portal-up', static function () {
 })->name('Portal.Up');
 
 // ===================== User Auth Routes ==================================
+
+Route::get('/', function () {
+    return redirect('/Authentication/Login-Form');
+});
+
 Route::prefix('Authentication')->group(callback: function () {
     Route::get('/Login-Form', LoginForm::class,)->name('Auth.Forms');
     Route::post('/Login-Form', [LoginForm::class, 'UserLogin'])->name('Auth.User');
@@ -127,6 +133,8 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Au
     Route::get('/Research-Completed-Orders', ResearchCompletedOrders::class,)->name('Research.Completed.Orders')->middleware('Check_Permissions:Research_list');
     Route::get('/View-Research-Order/{Order_ID}', ReasearchOrdersView::class,)->name('Order.Details')->middleware('Check_Permissions:Research_detail');
 
+    Route::get('/View-Assign-Task', [ReasearchOrdersView::class, 'ViewAssignTask'] )->name('View.Assign.Task');
+
     Route::post('/Assign-Order', [ReasearchOrdersView::class, 'assignOrder'])->name('Assign.Order')->middleware('Check_Permissions:Research_detail');
     Route::post('/New-Order-Task', [OrdersService::class, 'newOrderTask'])->name('New.Task')->middleware('Check_Permissions:Research_detail');
     Route::post('/Edit-Order-Task', [OrdersService::class, 'EditOrderTask'])->name('Edit.Task')->middleware('Check_Permissions:Research_detail');
@@ -150,8 +158,9 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Au
     Route::get('/Content-Orders', ContentOrdersList::class,)->name('Content.Orders')->middleware('Check_Permissions:Content_list');
     Route::get('/Content-Completed-Orders', ContentCompletedOrders::class,)->name('Content.Completed.Orders')->middleware('Check_Permissions:Content_list');
     Route::get('/View-Content-Order/{Order_ID}', ContentOrderView::class,)->name('Content.Order.Details');
-//    ->middleware('Check_Permissions:Content_detail')
+    //    ->middleware('Check_Permissions:Content_detail')
     Route::post('/Content-Final-Submission', [OrdersService::class, 'ContentOrderSubmission'])->name('Content.Order.Final.Submit');
+    Route::post('/Content-Draft-Submission', [OrdersService::class, 'ContentOrderDraftSubmission'])->name('Order.Draft.Submit');
     Route::post('/Content-Order-Revision', [OrdersService::class, 'ContentOrderRevision'])->name('Content.Order.Revision');
     Route::post('/Change-Content-Writer', [OrdersService::class, 'ChangeContentWriter'])->name('Change.Content.Writer')->middleware('Check_Permissions:Research_detail');
     Route::post('/Remove-Content-Writer', [OrdersService::class, 'removeContentWriter'])->name('Remove.Content.Writer')->middleware('Check_Permissions:Research_detail');
@@ -180,8 +189,7 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Em
     Route::post('/Update-Leave-Info', [ViewEmployee::class, 'updateEMPLeaveInfo'])->name('Update.Leave.Employee.Info')->middleware('Check_Permissions:Employee_edit');
     Route::post('/Update-Bank-Info', [ViewEmployee::class, 'updateEMPBankInfo'])->name('Update.Bank.Employee.Info')->middleware('Check_Permissions:Employee_edit');
     Route::post('/Update-Password', [ViewEmployee::class, 'updateEMPPassword'])->name('Update.Employee.Password')->middleware('Check_Permissions:Employee_edit');
-    Route::post('/Update-Image' , [ViewEmployee::class, 'updateProfileImage' ])->name('Update.Profile.Image');
-
+    Route::post('/Update-Image', [ViewEmployee::class, 'updateProfileImage'])->name('Update.Profile.Image');
 });
 
 Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Pre-Villages'], static function () {

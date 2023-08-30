@@ -234,7 +234,7 @@ class AjaxController extends Controller
                         }
                     ]);
                 });
-        } elseif ($Role_ID === 4) {
+        } elseif ($Role_ID === 4) { // Adding a new condition due to which Role ID 4 cannot see chat messages from Role ID 8.
             $query->whereHas('authorized_user', function ($q) {
                 $q->whereIn('Role_ID', [1, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // Updated Role_IDs
             });

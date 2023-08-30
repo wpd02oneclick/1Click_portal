@@ -6,6 +6,8 @@ use App\Helpers\PortalHelpers;
 use App\Models\Auth\User;
 use App\Models\BasicModels\WriterSkills;
 use App\Models\ContentOrders\ContentBasicInfo;
+use App\Models\Draft\DraftAttachment;
+use App\Models\Draft\DraftSubmission;
 use App\Models\Performance\UserWordsStats;
 use App\Models\ResearchOrders\ClientOrdersList;
 use App\Models\ResearchOrders\FinalOrderSubmission;
@@ -22,6 +24,8 @@ use App\Models\ResearchOrders\OrderRevisionAttachments;
 use App\Models\ResearchOrders\OrderSubmissionInfo;
 use App\Models\ResearchOrders\OrderTask;
 use App\Models\ResearchOrders\OrderTaskSubmit;
+use App\Models\ResearchOrders\ResearchDraftAttachment;
+use App\Models\ResearchOrders\ResearchDraftSubmission;
 use App\Models\ResearchOrders\ResearchOrderSubmissionDeadline;
 use App\Models\ResearchOrders\RevisionAttachments;
 use App\Models\ResearchOrders\TaskCancelWords;
@@ -83,6 +87,7 @@ class OrdersService
 
     public function CreateOrder(Request $request, $user_id, $client_id, ?string $F_DeadLine, ?string $S_DeadLine, ?string $T_DeadLine, bool $flag, string $Role_Name, string $L_OID): RedirectResponse
     {
+
         try {
             DB::beginTransaction();
 
@@ -291,8 +296,7 @@ class OrdersService
         try {
             $authUser = Auth::guard('Authorized')->user();
             $message = $Order_Info->Order_ID . ' Order has been Created!';
-            PortalHelpers::sendNotification(null, $Order_Info->Order_ID, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 9, 10, 11]);//Add 9 role id because of noticition not show in rolec 9
-
+            PortalHelpers::sendNotification(null, $Order_Info->Order_ID, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 9, 10, 11]); // Adding Role ID 9 because notifications are not showing for Role 9.
             DB::commit();
             if ((int)$Order_Type === 1) {
                 return redirect()->route('Research.Orders')->with('Success!', "Order Created Successfully!");
@@ -1131,4 +1135,51 @@ class OrdersService
         DB::rollBack();
         return back()->with('Error!', "Order Submission Error!");
     }
+
+
+    public function ContentOrderDraftSubmission(Request $request)
+    {
+        // dd($request->toArray());
+        DB::beginTransaction(); // Start the transaction
+
+        $draft_submission = DraftSubmission::create([
+            'order_id' => $request->order_id,
+            'order_number' => $request->Order_Number,
+            'submitted_by' => $request->user_id,
+            'draft_number' => $request->draft_number
+        ]);
+
+        if ($draft_submission) {
+            $uploadedFiles = $request->file('files');
+            if ($uploadedFiles) {
+                foreach ($uploadedFiles as $key => $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $filePath = 'Uploads/Draft-Attachments/' . $request->Order_Number . '/' . $request->draft_number . '/' . $fileName;
+
+                    $file->move(public_path('Uploads/Draft-Attachments/' . $request->Order_Number . '/' . $request->draft_number), $fileName);
+
+                    DraftAttachment::create([
+                        'File_Name' => $fileName,
+                        'File_Path' => $filePath,
+                        'Draft_submission_id' => $draft_submission->id,
+                    ]);
+                }
+
+                DB::commit();
+                $authUser = Auth::guard('Authorized')->user();
+                PortalHelpers::sendNotification(null, $request->Order_Number, 'The Order ' . $request->Order_Number . ' Draft has been  Submitted!', $authUser->designation->Designation_Name, [(int)$authUser->id], [1, 4, 9, 10, 11]);
+                // Commit the transaction after all files are processed
+                return back()->with('Success!', "Draft Submitted successfully");
+            } else {
+                DB::rollBack();
+                return back()->with('Error!', "Draft Files not uploaded!");
+            }
+        } else {
+            DB::rollBack();
+            return back()->with('Error!', "Draft Upload Failed!");
+        }
+    }
+
+
+  
 }

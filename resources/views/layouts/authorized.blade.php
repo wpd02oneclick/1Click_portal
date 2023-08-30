@@ -15,6 +15,8 @@
           content="admin dashboard, admin panel template, html admin template, dashboard html template, bootstrap 4 dashboard, template admin bootstrap 4, simple admin panel template, simple dashboard html template,  bootstrap admin panel, task dashboard, job dashboard, bootstrap admin panel, dashboards html, panel in html, bootstrap 4 dashboard, bootstrap 5 dashboard, bootstrap5 dashboard"/>
     <!-- Title -->
     <title>1Click - Portal System</title>
+  
+
     <!-- Jquery js-->
     @include('partials.stylesheets')
     <style>

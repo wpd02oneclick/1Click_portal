@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Content;
 
 use App\Models\Auth\User;
+use App\Models\Draft\DraftSubmission;
 use App\Services\ContentOrderService;
 use App\Services\OrdersService;
 use Illuminate\Http\Request;
@@ -26,10 +27,23 @@ class ContentOrderView extends Component
         $Order_ID = Crypt::decryptString($request->Order_ID);
         $auth_user = Auth::guard('Authorized')->user();
 
+
+
+        $draft_submission = DraftSubmission::where('order_number', $Order_ID)->get();
+
+        // if ($draft_submission) {
+        //     $attachments = $draft_submission->attachments;
+        //         dd($attachments);
+        // } else {
+        //     dd('No Relation found');
+            
+        // }        
+
+
         $Content_Order = $this->contentOrderService->getOrderDetail($Order_ID);
         $Content_Writer_List = $this->contentOrderService->getContentWriters();
         $Writers = $this->ordersService->getWriters((int)$auth_user->Role_ID, (int)$auth_user->id);
 
-        return view('livewire.content.content-order-view', compact('Order_ID', 'Content_Order', 'Content_Writer_List', 'Writers', 'auth_user'))->layout('layouts.authorized');
+        return view('livewire.content.content-order-view', compact('Order_ID', 'Content_Order', 'Content_Writer_List', 'Writers', 'auth_user' , 'draft_submission'))->layout('layouts.authorized');
     }
 }
