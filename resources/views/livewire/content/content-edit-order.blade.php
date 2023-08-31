@@ -1,7 +1,11 @@
+{{-- @php
+    dd($Content_Order->submission_info->toArray());
+@endphp --}}
+
 <!--Page header-->
 <div class="page-header d-xl-flex d-block">
     <div class="page-leftheader">
-        <h4 class="page-title">Research<span class="font-weight-normal text-muted ms-2"> Writing Orders</span></h4>
+        <h4 class="page-title"><span class="font-weight-normal text-muted ms-2"> Orders Update</span></h4>
     </div>
 </div>
 <!--End Page header-->
@@ -297,6 +301,7 @@
                                value="{{ (!empty($Content_Order->submission_info->F_DeadLine))?date('Y-m-d', strtotime($Content_Order->submission_info->F_DeadLine)):'' }}">
                     </div>
                 </div>
+                
                 <div class="col-lg-2">
                     <label class="form-label">2nd Draft DeadLine</label>
                     <div class="input-group">
@@ -305,9 +310,9 @@
                                 <span class="feather feather-calendar"></span>
                             </div>
                         </div>
-                        <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" name="S_DeadLine"
+                        <input class="form-control " placeholder="MM/DD/YYYY" name="S_DeadLine"
                                type="date"
-                               value="{{ (!empty($Content_Order->submission_info->S_DeadLine))?date('Y-m-d', strtotime($Content_Order->submission_info->S_DeadLine)) : '' }}">
+                               value="{{ (!empty($Content_Order->submission_info->S_DeadLine))?date('Y-m-d', strtotime($Content_Order->submission_info->S_DeadLine)):'' }}">
                     </div>
                 </div>
                 <div class="col-lg-2">
@@ -318,9 +323,9 @@
                                 <span class="feather feather-calendar"></span>
                             </div>
                         </div>
-                        <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" name="T_DeadLine"
+                        <input class="form-control" placeholder="MM/DD/YYYY" name="T_DeadLine"
                                type="date"
-                               value="{{ (!empty($Content_Order->submission_info->T_DeadLine))?date('Y-m-d', strtotime($Content_Order->submission_info->T_DeadLine)): '' }}">
+                               value="{{ (!empty($Content_Order->submission_info->T_DeadLine))?date('Y-m-d', strtotime($Content_Order->submission_info->T_DeadLine)):'' }}">
                     </div>
                 </div>
             </div>

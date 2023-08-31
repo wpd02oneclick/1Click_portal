@@ -108,20 +108,14 @@ class OrdersService
                     $OrderSubmissionInfo = OrderSubmissionInfo::create([
                         'DeadLine' => date('Y-m-d', strtotime($request->DeadLine)),
                         'DeadLine_Time' => $request->input('DeadLine_Time'),
+                        'F_DeadLine' => $request->input('F_DeadLine'),
+                        'S_DeadLine' => $request->input('S_DeadLine'),
+                        'T_DeadLine' => $request->input('T_DeadLine'),
                         'order_id' => $order_id,
                         'user_id' => $user_id,
                         'client_id' => $client_id
                     ]);
 
-                    if (isset($request->DeadLines)) {
-                        foreach ($request->DeadLines as $DeadLine) {
-                            ResearchOrderSubmissionDeadline::create([
-                                'DeadLines' => $DeadLine,
-                                'is_Submit' => 0,
-                                'order_id' => $order_id,
-                            ]);
-                        }
-                    }
                     if ($OrderSubmissionInfo) {
                         $OrderReferenceInfo = OrderReferenceInfo::create([
                             'Reference_Code' => $request->Reference_Code,

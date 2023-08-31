@@ -26,6 +26,8 @@ class ResearchCreateOrder extends Component
 
     public function render(Request $request)
     {
+
+        
         $Order_Services = $this->pre_Villages->getOrderServices();
         $Order_Websites = $this->pre_Villages->getOrderWebsites();
         $Currencies = OrderCurrencies::get();
@@ -39,6 +41,7 @@ class ResearchCreateOrder extends Component
 
     public function createResearchOrder(Request $request, OrdersService $orderService): RedirectResponse
     {
+        // dd($request->toArray());
         return $orderService->createNewOrder($request);
     }
 }

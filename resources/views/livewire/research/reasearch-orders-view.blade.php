@@ -1,4 +1,4 @@
-div<style>
+<style>
     .msg_card_body {
         background: url({{ asset('assets/images/pattern2.png') }}) !important;
         overflow-y: auto;
@@ -15,7 +15,7 @@ div<style>
 </style>
 
 @php
-    //dd($Research_Order->deadlines->toArray());
+    //dd($Research_Order->submission_info->toArray());
     $assign = 0;
     $total_words = 0;
 @endphp
@@ -73,7 +73,7 @@ div<style>
                         @if (!empty($Research_Order->revision))
                             <li><a href="#tab11" data-bs-toggle="tab">Order Revisions</a></li>
                         @endif
-                        @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                        @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                             <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
                         @endif
                     </ul>
@@ -364,7 +364,7 @@ div<style>
                             @endforeach
                         </div>
                     @endif
-                    @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                    @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -597,22 +597,42 @@ div<style>
                                     </tr>
                                 @endif
 
-                                @if (!is_null($Research_Order->deadlines))
-                                    @forelse($Research_Order->deadlines as $deadline)
-                                        <tr>
-                                            <td>
-                                                <span class="w-50">Draft Deadline {{ $loop->iteration }}</span>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <span
-                                                    class="font-weight-semibold text-danger">{{ $deadline->DeadLines }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
+                                @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">First Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->F_DeadLine }}</span>
+                                        </td>
+                                    </tr>
                                 @endif
-
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Second Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->S_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Third Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->T_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td>
                                         <span class="w-50">Final Deadline</span>
@@ -1257,7 +1277,6 @@ div<style>
                             <i class="fe fe-activity me-2"></i>Actions
                         </button>
                         <div class="dropdown-menu">
-                            {{--                            <a class="dropdown-item" href="{{ route('Submit.Research.Order', ['Order_ID' => $Research_Order->id]) }}">Submit Order</a> --}}
                             <a class="dropdown-item Order-Revision" href="JavaScript:void(0);" data-bs-toggle="modal"
                                 data-bs-target="#TaskRevisionModal">Add Revision
                                 <input type="hidden" id="Order_ID" value="{{ $Research_Order->Order_ID }}"></a>
@@ -1291,7 +1310,7 @@ div<style>
                         @if (!empty($Research_Order->revision))
                             <li><a href="#tab10" data-bs-toggle="tab">Order Revisions</a></li>
                         @endif
-                        @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                        @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                             <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
                         @endif
                     </ul>
@@ -1425,7 +1444,7 @@ div<style>
                             @endforeach
                         </div>
                     @endif
-                    @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                    @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -1654,21 +1673,43 @@ div<style>
                                         </td>
                                     </tr>
                                 @endif
-                             @if (!is_null($Research_Order->deadlines))
-                                    @forelse($Research_Order->deadlines as $deadline)
-                                        <tr>
-                                            <td>
-                                                <span class="w-50">Draft Deadline {{ $loop->iteration }}</span>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <span
-                                                    class="font-weight-semibold text-danger">{{ $deadline->DeadLines }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
+                                @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">First Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->F_DeadLine }}</span>
+                                        </td>
+                                    </tr>
                                 @endif
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Second Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->S_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Third Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->T_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                            
 
                                 <tr>
                                     <td>
@@ -1934,7 +1975,8 @@ div<style>
                         @if (!empty($Research_Order->revision))
                             <li><a href="#tab10" data-bs-toggle="tab">Order Revisions</a></li>
                         @endif
-                        @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                        @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
+
                             <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
                         @endif
                     </ul>
@@ -2070,7 +2112,7 @@ div<style>
                             @endforeach
                         </div>
                     @endif
-                    @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                    @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -2300,20 +2342,41 @@ div<style>
                                         </td>
                                     </tr>
                                 @endif
-                           @if (!is_null($Research_Order->deadlines))
-                                    @forelse($Research_Order->deadlines as $deadline)
-                                        <tr>
-                                            <td>
-                                                <span class="w-50">Draft Deadline {{ $loop->iteration }}</span>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <span
-                                                    class="font-weight-semibold text-danger">{{ $deadline->DeadLines }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
+                                 @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">First Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->F_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Second Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->S_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Third Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->T_DeadLine }}</span>
+                                        </td>
+                                    </tr>
                                 @endif
 
                                 <tr>
@@ -2455,9 +2518,10 @@ div<style>
                         @if (!empty($Research_Order->revision))
                             <li><a href="#tab11" data-bs-toggle="tab">Order Revisions</a></li>
                         @endif
-                        @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                        @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                             <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
                         @endif
+
                     </ul>
                 </div>
             </div>
@@ -2757,7 +2821,7 @@ div<style>
                             @endforeach
                         </div>
                     @endif
-                    @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                    @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -2967,20 +3031,41 @@ div<style>
                                             class="font-weight-semibold">{{ $Research_Order->basic_info->Sources }}</span>
                                     </td>
                                 </tr>
-                            @if (!is_null($Research_Order->deadlines))
-                                    @forelse($Research_Order->deadlines as $deadline)
-                                        <tr>
-                                            <td>
-                                                <span class="w-50">Draft Deadline {{ $loop->iteration }}</span>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <span
-                                                    class="font-weight-semibold text-danger">{{ $deadline->DeadLines }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
+                                 @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">First Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->F_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Second Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->S_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Third Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->T_DeadLine }}</span>
+                                        </td>
+                                    </tr>
                                 @endif
                                 <tr>
                                     <td>
@@ -3501,10 +3586,9 @@ div<style>
                         @if (!empty($Research_Order->revision))
                             <li><a href="#tab11" data-bs-toggle="tab">Order Revisions</a></li>
                         @endif
-                        @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
-                            <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
+                        @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
+                        <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
                         @endif
-                    </ul>
                 </div>
             </div>
             <div class="panel-body tabs-menu-body hremp-tabs1 p-0">
@@ -3803,7 +3887,7 @@ div<style>
                             @endforeach
                         </div>
                     @endif
-                    @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                    @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -4014,20 +4098,41 @@ div<style>
                                             class="font-weight-semibold">{{ $Research_Order->basic_info->Sources }}</span>
                                     </td>
                                 </tr>
-                                @if (!is_null($Research_Order->deadlines))
-                                    @forelse($Research_Order->deadlines as $deadline)
-                                        <tr>
-                                            <td>
-                                                <span class="w-50">Draft Deadline {{ $loop->iteration }}</span>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <span
-                                                    class="font-weight-semibold text-danger">{{ $deadline->DeadLines }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
+                                 @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">First Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->F_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Second Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->S_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Third Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->T_DeadLine }}</span>
+                                        </td>
+                                    </tr>
                                 @endif
                                 <tr>
                                     <td>
@@ -4967,7 +5072,7 @@ div<style>
                                 Description</a></li>
                         <li><a href="#tab7" data-bs-toggle="tab">Order Attachments</a></li>
                         <li><a href="#tab8" data-bs-toggle="tab">Order Assign Task</a></li>
-                        @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                        @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                             <li><a href="#tab12" data-bs-toggle="tab">Draft Submission</a></li>
                         @endif
                     </ul>
@@ -5153,7 +5258,7 @@ div<style>
                             </div>
                         </div>
                     </div>
-                    @if (!is_null($Research_Order->deadlines) && count($Research_Order->deadlines) > 0)
+                    @if (!empty($Research_Order->submission_info->F_DeadLine) || !empty($Research_Order->submission_info->S_DeadLine) || !empty($Research_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -5364,20 +5469,41 @@ div<style>
                                             class="font-weight-semibold">{{ $Research_Order->basic_info->Sources }}</span>
                                     </td>
                                 </tr>
-                                @if (!is_null($Research_Order->deadlines))
-                                    @forelse($Research_Order->deadlines as $deadline)
-                                        <tr>
-                                            <td>
-                                                <span class="w-50">Draft Deadline {{ $loop->iteration }}</span>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <span
-                                                    class="font-weight-semibold text-danger">{{ $deadline->DeadLines }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
+                                 @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">First Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->F_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Second Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->S_DeadLine }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <tr>
+                                        <td>
+                                            <span class="w-50">Third Draft</span>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <span
+                                                class="font-weight-semibold text-danger">{{ $Research_Order->submission_info->T_DeadLine }}</span>
+                                        </td>
+                                    </tr>
                                 @endif
                                 <tr>
                                     <td>
@@ -5510,15 +5636,18 @@ div<style>
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="form-label" class="form-label"> Select Draft</label>
-                                <select name="draft_number" id="draft_number" class="form-select" required>
-                                    <option value="" disabled selected>Select Deadline</option>
-                                    @if (!is_null($Research_Order->deadlines))
-                                        @foreach ($Research_Order->deadlines as $deadline)
-                                            <option value="{{ $loop->iteration }}">Draft {{ $loop->iteration }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
+                              <select name="draft_number" id="draft_number" class="form-select" required>
+                                <option value="" disabled selected>Select Deadline</option>
+                                @if (!empty($Research_Order->submission_info->F_DeadLine))
+                                    <option value="1">1st Draft</option>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->S_DeadLine))
+                                    <option value="2">2nd Draft</option>
+                                @endif
+                                @if (!empty($Research_Order->submission_info->T_DeadLine))
+                                    <option value="3">3rd Draft</option>
+                                @endif
+                            </select>
                             </div>
                         </div>
                         <div class="col-lg-12">

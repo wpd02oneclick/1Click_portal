@@ -181,7 +181,7 @@
             </div>
             <h4 class="my-4">Submission Date Information</h4>
             <div class="row row-sm mb-4">
-                <div class="col-lg-3">
+                <div class="col-lg-3 mb-2">
                     <label class="form-label">DeadLine Date</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -193,7 +193,7 @@
                                type="date">
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-3 mb-2">
                     <label class="form-label">DeadLine Time</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -205,25 +205,40 @@
                                required>
                     </div><!-- input-group -->
                 </div>
-                <div class="col-lg-1 mt-5">
-                    <button class="btn btn-primary add-button" type="button">Add Draft DeadLines</button>
-                </div>
-            </div>
-
-            <div id="repeater-container" class="row">
-                <div class="repeater-item col-lg-3">
-                    <div>
-                        <label class="form-label">Draft DeadLine</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <span class="feather feather-calendar"></span>
-                                </div>
+                <div class="col-lg-3 mb-2">
+                    <label class="form-label">First Date</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="feather feather-calendar"></span>
                             </div>
-                            <input class="form-control" placeholder="MM/DD/YYYY" name="DeadLines[]"
-                                   type="date">
-                            <button class="btn btn-danger remove-button" type="button">Remove</button>
                         </div>
+                        <input class="form-control" placeholder="MM/DD/YYYY" name="F_DeadLine" 
+                               type="date">
+                    </div>
+                </div>
+                <div class="col-lg-3 mb-2">
+                    <label class="form-label">Second Date</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="feather feather-calendar"></span>
+                            </div>
+                        </div>
+                        <input class="form-control" placeholder="MM/DD/YYYY" name="S_DeadLine" 
+                               type="date">
+                    </div>
+                </div>
+                <div class="col-lg-3 mb-2">
+                    <label class="form-label">Third Date</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="feather feather-calendar"></span>
+                            </div>
+                        </div>
+                        <input class="form-control" placeholder="MM/DD/YYYY" name="T_DeadLine" 
+                               type="date">
                     </div>
                 </div>
             </div>
