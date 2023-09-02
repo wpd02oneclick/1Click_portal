@@ -195,11 +195,13 @@ class PortalHelpers
 
     public static function sendNotification(?string $order_id, ?string $Order_ID, string $message, string $role, array $User_IDs, array $Role_IDs): void
     {
+        $currentUser = Auth::guard('Authorized')->user();
         $notificationData = [
             'Order_ID' => $Order_ID,
             'Role_Name' => $role,
             'Message' => $message,
             'Play_Sound' => true,
+            'sender_user_id' => $currentUser->id, // Include sender's user ID in the data
         ];
 
         if (empty($Order_ID)) {
@@ -210,6 +212,9 @@ class PortalHelpers
         $users = User::whereIn('id', $User_IDs)->orWhereIn('Role_ID', $Role_IDs)->get();
         Notification::send($users, new PortalNotifications($notificationData));
     }
+
+
+
 
     public static function getPageCount($Words, $Spacing): float
     {
@@ -360,23 +365,39 @@ class PortalHelpers
         return (int)(($obtained / $total) * 100);
     }
 
+
+
+
     public static function getPortalNotification(): array
     {
-        $currentUser = Auth::guard('Authorized')->user()->id;
+        $currentUser = Auth::guard('Authorized')->user();
+
+        // Fetch all notifications for the current user
         $allNotifications = DB::table('notifications')
+            ->where('notifiable_id', '=', $currentUser->id)
             ->latest('created_at')
-            ->where('notifiable_id', $currentUser)
             ->get();
-        $notificationsCount = DB::table('notifications')
-            ->latest('created_at')
-            ->where('notifiable_id', $currentUser)
-            ->whereNull('read_at')->count();
+
+        // Filter notifications to exclude those sent by the current user
+        $filteredNotifications = $allNotifications->filter(function ($notification) use ($currentUser) {
+            $data = json_decode($notification->data);
+
+            // Check if the sender_user_id is set and not equal to the current user's ID
+            return !isset($data->sender_user_id) || $data->sender_user_id != $currentUser->id;
+        });
+
+        $notificationsCount = $filteredNotifications->whereNull('read_at')->count();
 
         return [
-            'Notifications' => $allNotifications,
+            'Notifications' => $filteredNotifications,
             'NotificationsCount' => $notificationsCount
         ];
     }
+
+
+
+
+
 
 //    public static function downloadFile($filePath)
 //    {

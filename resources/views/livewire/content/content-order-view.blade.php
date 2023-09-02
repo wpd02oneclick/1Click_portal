@@ -14,8 +14,7 @@
     }
 </style>
 {{-- Admin View --}}
-@php   
-  
+@php     
     $total_words = 0;
     $assign = 0;    
 @endphp

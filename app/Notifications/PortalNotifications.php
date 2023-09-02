@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class PortalNotifications extends Notification
 {
@@ -49,13 +50,16 @@ class PortalNotifications extends Notification
 
     public function toDatabase(mixed $notifiable): array
     {
+        $currentUser = Auth::guard('Authorized')->user();
         return [
             'Order_ID' => $this->NotificationData['Order_ID']?? null,
             'Role_Name' => $this->NotificationData['Role_Name']?? null,
             'Emp_ID' => $this->NotificationData['Emp_ID']?? null,
             'Message' => $this->NotificationData['Message'],
             'Play_Sound' => true,
+            'sender_user_id' => $currentUser->id,
         ];
+     
     }
 
     /**

@@ -37,7 +37,16 @@ class ReasearchOrdersView extends Component
     public function render(Request $request)
     {
         $Order_ID = Crypt::decryptString($request->Order_ID);
-        $auth_user = Auth::guard('Authorized')->user();
+        $auth_user = Auth::guard('Authorized')->user();   
+
+
+        $currentDateTime = date('Y-m-d H:i:s');
+
+        DB::table('notifications')
+        ->where('notifiable_id', $auth_user->id)
+        ->where('data->Order_ID', $Order_ID) // Use 'Order_ID' from your data field
+        ->update(['read_at' => $currentDateTime]);
+
 
         $draft_submission = DraftSubmission::where('order_number', $Order_ID)->get();        
         $Research_Order = $this->researchOrderService->getOrderDetail($Order_ID, (int)$auth_user->Role_ID, (int)$auth_user->id);

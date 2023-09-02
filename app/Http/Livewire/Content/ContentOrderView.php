@@ -9,7 +9,10 @@ use App\Services\OrdersService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+
 use Livewire\Component;
+
 
 class ContentOrderView extends Component
 {
@@ -27,18 +30,16 @@ class ContentOrderView extends Component
         $Order_ID = Crypt::decryptString($request->Order_ID);
         $auth_user = Auth::guard('Authorized')->user();
 
-
-
         $draft_submission = DraftSubmission::where('order_number', $Order_ID)->get();
+        $currentUser = Auth::guard('Authorized')->user();
+       
 
-        // if ($draft_submission) {
-        //     $attachments = $draft_submission->attachments;
-        //         dd($attachments);
-        // } else {
-        //     dd('No Relation found');
-            
-        // }        
+        $currentDateTime = date('Y-m-d H:i:s');
 
+        DB::table('notifications')
+        ->where('notifiable_id', $currentUser->id)
+        ->where('data->Order_ID', $Order_ID) // Use 'Order_ID' from your data field
+        ->update(['read_at' => $currentDateTime]);
 
         $Content_Order = $this->contentOrderService->getOrderDetail($Order_ID);
         $Content_Writer_List = $this->contentOrderService->getContentWriters();

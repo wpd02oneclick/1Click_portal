@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -164,6 +165,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserBenchMark::class, 'user_id');
     }
+
+
 
     // User DB Attribute
     public function createdAt(): Attribute
