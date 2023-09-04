@@ -28,6 +28,7 @@ use App\Models\ResearchOrders\ResearchDraftAttachment;
 use App\Models\ResearchOrders\ResearchDraftSubmission;
 use App\Models\ResearchOrders\ResearchOrderSubmissionDeadline;
 use App\Models\ResearchOrders\RevisionAttachments;
+use App\Models\ResearchOrders\SubmitRevisionAttachment;
 use App\Models\ResearchOrders\TaskCancelWords;
 use App\Models\ResearchOrders\TaskRevision;
 use Carbon\Carbon;
@@ -921,7 +922,7 @@ class OrdersService
         $Order_Info = OrderInfo::where('Order_ID', $request->Order_ID)->firstOrFail();
         $authUser = Auth::guard('Authorized')->user();
         $message = $request->Order_ID . ' The Revision of Order has been Placed!';
-        PortalHelpers::sendNotification(null, $request->Order_ID, $message, $authUser->designation->Designation_Name, [(int)$Order_Info->assign_id], [1, 4, (int)$authUser->Role_ID, 9, 10, 11]);
+        PortalHelpers::sendNotification(null, $request->Order_ID, $message, $authUser->designation->Designation_Name, [(int)$Order_Info->assign_id], [1, 4, (int)$authUser->Role_ID, 5, 9, 10, 11]);
 
         DB::commit();
         return back()->with('Success!', 'Order Revision Submitted!');
@@ -1173,6 +1174,121 @@ class OrdersService
             return back()->with('Error!', "Draft Upload Failed!");
         }
     }
+
+
+    public function GetRevisionDetails(Request $request){
+        $Revision_ID = $request->Revision_ID;
+        $Revision_Info = OrderRevision::with('attachments' , 'order_info' , 'revision_by')->where('id', $Revision_ID)->first();
+
+        if ($Revision_Info) {
+            $Revised_By_Name = $Revision_Info->revision_by->basic_info->F_Name . ' ' . $Revision_Info->revision_by->basic_info->L_Name;
+
+            $responseArray = [
+                'revision_id' => $Revision_Info->id,
+                'revision_details' => $Revision_Info->Order_Revision,
+                'revised_by' => $Revised_By_Name,
+                'Order_deadLine' => $Revision_Info->order_info->submission_info->DeadLine,
+                'Order_deadLine_Time' => $Revision_Info->order_info->submission_info->DeadLine_Time,
+                'Order_Id'=>$Revision_Info->order_id,
+                'revision_date' => $Revision_Info->created_at,
+                'attachments' => [],
+            ];
+
+            if ($Revision_Info->attachments->count() > 0) {
+                foreach ($Revision_Info->attachments as $attachment) {
+                    $responseArray['attachments'][] = [
+                        'file_name' => $attachment->File_Name,
+                        'file_path' => $attachment->file_path,
+                        'attachment_time' => $attachment->created_at, 
+                        
+                    ];
+                }
+            }
+
+            return $responseArray;
+
+        } else {
+            return ['error' => 'Order Revision not found'];
+        }
+
+
+        
+    }
+
+
+    public function SubmitOrderRevision(Request $request){      
+
+        $uploadedFiles = $request->file('files');
+      
+        if ($uploadedFiles) {
+            foreach ($uploadedFiles as $key => $file) {
+                $fileName = $file->getClientOriginalName();
+                $filePath = 'Uploads/Revision-Attachments/' . $request->Revision_ID . '/'. $fileName;
+
+                $file->move(public_path('Uploads/Revision-Attachments/' . $request->Revision_ID . '/' ), $fileName);
+
+                 SubmitRevisionAttachment::create([
+                    'file_name' => $fileName,
+                    'file_path' => $filePath,
+                    'uploaded_by' => $request->upload_by,
+                    'revision_id' => $request->Revision_ID,
+                ]);
+            }
+            $OrderBasicInfo = OrderBasicInfo::where('order_id', $request->Order_ID)
+            ->update([
+                'Order_Status' => 2
+            ]);
+
+            if($OrderBasicInfo){
+                $authUser = Auth::guard('Authorized')->user();
+                $message = "The Order " . $request->Order_Number . "have Submit a Revision";
+                PortalHelpers::sendNotification($request->Order_ID, null, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 5, 9, 10, 11]);
+                return back()->with('Success!' , 'Revision Submited Successfully');
+            }else{
+                return back()->with('Error!', 'Revision Not Submited Sucessfully');
+            }
+
+
+
+
+        }else{
+            return back()->with('Error!', 'File Not Submited Sucessfuyy');
+
+        }
+
+    }
+
+
+    public function GetRevisionAttachment(Request $request)
+    {
+        $Revision_Info = SubmitRevisionAttachment::where('revision_id', $request->Revision_ID)->get();
+
+        $tableHtml = ''; // Initialize an empty string
+
+        foreach ($Revision_Info as $index => $attachment) {
+            $assetUrl = asset($attachment->file_path);
+            $Full_Name = $attachment->UplodedBy->basic_info->F_Name . ' ' . $attachment->UplodedBy->basic_info->L_Name;
+
+            $tableHtml .= '<tr>'; // Append to the existing string
+            $tableHtml .= '<td>' . ($index + 1) . '</td>';
+            $tableHtml .= '<td>' . $attachment->file_name . '<br>' . $attachment->created_at . '</td>';
+            $tableHtml .= '<td>' . $Full_Name . '</td>';
+            $tableHtml .= '<td>';
+            $tableHtml .= '<div class="d-flex justify-content-center">';
+            $tableHtml .= '<a href="' . $assetUrl . '" class="action-btns1" ' .
+                'data-bs-toggle="tooltip" download="' . $attachment->file_name . '" ' .
+                'data-bs-placement="top" title="Download" target="_blank" aria-label="Download">';
+            $tableHtml .= '<i class="feather feather-download text-success"></i>';
+            $tableHtml .= '</a>';
+            $tableHtml .= '</div>';
+            $tableHtml .= '</td>';
+            $tableHtml .= '</tr>';
+        }
+
+        return $tableHtml;
+    }
+
+
 
 
   

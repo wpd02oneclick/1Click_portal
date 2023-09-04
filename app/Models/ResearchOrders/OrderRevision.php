@@ -33,6 +33,11 @@ class OrderRevision extends Model
     {
         return $this->hasMany(OrderRevisionAttachments::class, 'revision_id');
     }
+    
+    public function SubmitAttachment():HasMany
+    {
+        return $this->hasMany(SubmitRevisionAttachment::class, 'revision_id');
+    }
 
     // User DB Attribute
 

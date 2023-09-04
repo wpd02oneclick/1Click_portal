@@ -152,6 +152,15 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Au
     Route::get('/Delete-Research-Writing-Order/{Order_ID}', [OrdersService::class, 'deleteResearchOrder'])->name('Delete.Research.Order')->middleware('Check_Permissions:Research_detail');
     Route::post('/Research-Order-Revision', [OrdersService::class, 'ResearchOrderRevision'])->name('Research.Order.Revision')->middleware('Check_Permissions:Research_detail');
 
+
+    Route::post('/Submit-Order-Revision', [OrdersService::class, 'SubmitOrderRevision'])->name('Submit.Upload.Order.Revision');
+    Route::get('/Get-Writer-Attachment', [OrdersService::class, 'GetRevisionAttachment'])->name('Get.Writer.Order.Attachment');
+
+
+   
+
+    
+
     // Content Orders Routes
     Route::get('/Content-Writing-Order/{Client_ID?}', ContentCreateOrder::class,)->name('Content.Create.Order')->middleware('Check_Permissions:Content_create');
     Route::post('/Post-Content-Writing-Order', [ContentCreateOrder::class, 'createContentOrder'])->name('Post.Content.Create.Order')->middleware('Check_Permissions:Content_create');
@@ -275,6 +284,8 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Hu
 });
 
 Route::group(['prefix' => 'AJAX'], static function () {
+
+
     Route::get('/Get-Clients', [AjaxController::class, 'getRegClient'])->name('Get.Clients');
     Route::get('/Get-Client-Info', [AjaxController::class, 'getClientInfo'])->name('Get.Client.Info');
     Route::get('/Get-Task-Revisions', [AjaxController::class, 'getTaskRevisions'])->name('Get.Task.Revisions');
@@ -315,6 +326,8 @@ Route::group(['prefix' => 'AJAX'], static function () {
 
     // Get Portal Errors
     Route::get('/Get-Portal-Errors', [AjaxController::class, 'getPortalErrorFounds'])->name('Get.Portal.Errors');
+    Route::get('/Get-Revision-Details', [OrdersService::class, 'GetRevisionDetails'])->name('Get.Revision.Details');
+
 });
 
 Route::group(['middleware' => ['Authorized'], 'prefix' => 'Trashed'], static function () {

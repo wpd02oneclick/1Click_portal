@@ -366,25 +366,15 @@ class PortalHelpers
     }
 
 
-
-
     public static function getPortalNotification(): array
     {
         $currentUser = Auth::guard('Authorized')->user();
 
-        // Fetch all notifications for the current user
-        $allNotifications = DB::table('notifications')
+        $filteredNotifications = DB::table('notifications')
             ->where('notifiable_id', '=', $currentUser->id)
-            ->latest('created_at')
+            ->whereRaw('(JSON_UNQUOTE(JSON_EXTRACT(`data`, "$.sender_user_id")) IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(`data`, "$.sender_user_id")) != ?)', [$currentUser->id])
+            ->orderByDesc('created_at')
             ->get();
-
-        // Filter notifications to exclude those sent by the current user
-        $filteredNotifications = $allNotifications->filter(function ($notification) use ($currentUser) {
-            $data = json_decode($notification->data);
-
-            // Check if the sender_user_id is set and not equal to the current user's ID
-            return !isset($data->sender_user_id) || $data->sender_user_id != $currentUser->id;
-        });
 
         $notificationsCount = $filteredNotifications->whereNull('read_at')->count();
 
@@ -395,18 +385,6 @@ class PortalHelpers
     }
 
 
-
-
-
-
-//    public static function downloadFile($filePath)
-//    {
-//        $full_filePath = public_path($filePath);
-//        if (file_exists($full_filePath)) {
-//            return response()->file($full_filePath);
-//        }
-//        return $full_filePath;
-////        abort(404, 'File not found');
-//    }
+//   
 
 }

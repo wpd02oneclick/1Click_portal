@@ -11,6 +11,8 @@ use App\Services\ResearchOrderService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
+
 
 class Dashboard extends Component
 {
