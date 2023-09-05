@@ -152,14 +152,7 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Au
     Route::get('/Delete-Research-Writing-Order/{Order_ID}', [OrdersService::class, 'deleteResearchOrder'])->name('Delete.Research.Order')->middleware('Check_Permissions:Research_detail');
     Route::post('/Research-Order-Revision', [OrdersService::class, 'ResearchOrderRevision'])->name('Research.Order.Revision')->middleware('Check_Permissions:Research_detail');
 
-
     Route::post('/Submit-Order-Revision', [OrdersService::class, 'SubmitOrderRevision'])->name('Submit.Upload.Order.Revision');
-    Route::get('/Get-Writer-Attachment', [OrdersService::class, 'GetRevisionAttachment'])->name('Get.Writer.Order.Attachment');
-
-
-   
-
-    
 
     // Content Orders Routes
     Route::get('/Content-Writing-Order/{Client_ID?}', ContentCreateOrder::class,)->name('Content.Create.Order')->middleware('Check_Permissions:Content_create');
@@ -241,6 +234,8 @@ Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Pr
     Route::post('/Post-Portal-Permissions', [CreateUpdatePortalPermissions::class, 'submitPortalPermissions'])->name('Post.Portal.Permissions')->middleware('Check_Role');
 
     Route::get('/Get-Searching-Queries', SearchingQueries::class,)->name('Searching.Queries');
+
+
 });
 
 Route::group(['middleware' => ['Authorized', 'Encrypted_Route'], 'prefix' => 'Attendance'], static function () {
@@ -326,7 +321,15 @@ Route::group(['prefix' => 'AJAX'], static function () {
 
     // Get Portal Errors
     Route::get('/Get-Portal-Errors', [AjaxController::class, 'getPortalErrorFounds'])->name('Get.Portal.Errors');
-    Route::get('/Get-Revision-Details', [OrdersService::class, 'GetRevisionDetails'])->name('Get.Revision.Details');
+
+    Route::get('/Delete-Revision-Data', [OrdersService::class, 'DeleteRevisionData'])->name('Delete.Revision.Data');
+
+    
+    Route::post('/Update-Revision-Details', [OrdersService::class, 'UpdateRevisionOrder'])->name('Update.Revision.Order');
+    Route::get('/Get-Revision-Data', [OrdersService::class, 'GetRevisionData'])->name('Get.Revision.Data');
+    Route::get('/Get-Revision-Details-Attachment', [OrdersService::class, 'GetRevisionDetailsAndAttachment'])->name('Get.Revision.Deatils.Attachment');
+
+
 
 });
 

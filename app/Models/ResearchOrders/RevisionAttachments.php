@@ -16,8 +16,8 @@ class RevisionAttachments extends Model
         'File_Name',
         'file_path',
         'revision_id'
+        
     ];
-
     public function revision():belongsTo
     {
         return $this->belongsTo(TaskRevision::class, 'revision_id');

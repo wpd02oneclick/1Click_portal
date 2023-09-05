@@ -1176,58 +1176,92 @@ class OrdersService
     }
 
 
-    public function GetRevisionDetails(Request $request){
+    public function GetRevisionDetailsAndAttachment(Request $request)
+    {
         $Revision_ID = $request->Revision_ID;
-        $Revision_Info = OrderRevision::with('attachments' , 'order_info' , 'revision_by')->where('id', $Revision_ID)->first();
 
-        if ($Revision_Info) {
-            $Revised_By_Name = $Revision_Info->revision_by->basic_info->F_Name . ' ' . $Revision_Info->revision_by->basic_info->L_Name;
+        $Revision_Info = OrderRevision::with('order_info')->where('id' , $Revision_ID)->first();
 
-            $responseArray = [
-                'revision_id' => $Revision_Info->id,
-                'revision_details' => $Revision_Info->Order_Revision,
-                'revised_by' => $Revised_By_Name,
-                'Order_deadLine' => $Revision_Info->order_info->submission_info->DeadLine,
-                'Order_deadLine_Time' => $Revision_Info->order_info->submission_info->DeadLine_Time,
-                'Order_Id'=>$Revision_Info->order_id,
-                'revision_date' => $Revision_Info->created_at,
-                'attachments' => [],
-            ];
+        $Revision_Description = $Revision_Info->Order_Revision;
+        $Revision_deadline_Date = $Revision_Info->order_info->submission_info->DeadLine;
+        $Revision_deadline_Time = $Revision_Info->order_info->submission_info->DeadLine_Time;
 
-            if ($Revision_Info->attachments->count() > 0) {
-                foreach ($Revision_Info->attachments as $attachment) {
-                    $responseArray['attachments'][] = [
-                        'file_name' => $attachment->File_Name,
-                        'file_path' => $attachment->file_path,
-                        'attachment_time' => $attachment->created_at, 
-                        
-                    ];
-                }
-            }
+        
 
-            return $responseArray;
 
-        } else {
-            return ['error' => 'Order Revision not found'];
+        // Get Revision Details
+        $Sales_Table = OrderRevisionAttachments::where('revision_id', $Revision_ID)->get();
+
+        $SalesAttachment = "";
+        $a = 1;
+
+        foreach ($Sales_Table as $Info) {
+            $SalesAttachment .= '<tr>
+            <td>' . $a . '</td>
+            <td>' . $Info->File_Name . ' <br>' . $Info->created_at . '</td>
+            <td> 
+                <div class="d-flex justify-content-center">
+                    <a href="' . asset($Info->file_path) . '" class="action-btns1" data-bs-toggle="tooltip" download="' . $Info->File_Name . '" data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-download text-success"></i></a>
+                </div>
+            </td>
+        </tr>';
+
+            $a++;
+        }
+
+        // Get Revision Details
+        $Writer_Table = SubmitRevisionAttachment::with('UplodedBy')->where('revision_id', $Revision_ID)->get();
+
+        $WriterAttachment = "";
+        $b = 1;
+
+        foreach ($Writer_Table as $writerInfo) {
+
+            $FullName = $writerInfo->UplodedBy->basic_info->F_Name . ' ' . $writerInfo->UplodedBy->basic_info->L_Name;
+            $WriterAttachment .= '<tr>
+            <td>' . $b . '</td>
+            <td>' . $writerInfo->file_name . ' <br>' . $writerInfo->created_at . '</td>
+            <td>' . $FullName . '</td>
+            <td> 
+                <div class="d-flex justify-content-center">
+                    <a href="' . asset($writerInfo->file_path) . '" class="action-btns1" data-bs-toggle="tooltip" download="' . $writerInfo->File_Name . '" data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-download text-success"></i></a>
+                </div>
+            </td>
+        </tr>';
+
+            $b++;
         }
 
 
-        
+
+
+        return [
+            'SalesTableHtml' => $SalesAttachment,
+            'Revision_Description' => $Revision_Description,
+            'Revision_deadline_Date' => $Revision_deadline_Date,
+            'Revision_deadline_Time' => $Revision_deadline_Time,
+            'WriterAttachment' => $WriterAttachment
+
+            ];
     }
 
 
-    public function SubmitOrderRevision(Request $request){      
+
+
+
+    public function SubmitOrderRevision(Request $request)
+    {
 
         $uploadedFiles = $request->file('files');
-      
+
         if ($uploadedFiles) {
             foreach ($uploadedFiles as $key => $file) {
                 $fileName = $file->getClientOriginalName();
-                $filePath = 'Uploads/Revision-Attachments/' . $request->Revision_ID . '/'. $fileName;
+                $filePath = 'Uploads/Revision-Attachments/' . $request->Revision_ID . '/' . $fileName;
 
-                $file->move(public_path('Uploads/Revision-Attachments/' . $request->Revision_ID . '/' ), $fileName);
+                $file->move(public_path('Uploads/Revision-Attachments/' . $request->Revision_ID . '/'), $fileName);
 
-                 SubmitRevisionAttachment::create([
+                SubmitRevisionAttachment::create([
                     'file_name' => $fileName,
                     'file_path' => $filePath,
                     'uploaded_by' => $request->upload_by,
@@ -1235,61 +1269,126 @@ class OrdersService
                 ]);
             }
             $OrderBasicInfo = OrderBasicInfo::where('order_id', $request->Order_ID)
-            ->update([
-                'Order_Status' => 2
-            ]);
+                ->update([
+                    'Order_Status' => 2
+                ]);
 
-            if($OrderBasicInfo){
+            if ($OrderBasicInfo) {
                 $authUser = Auth::guard('Authorized')->user();
                 $message = "The Order " . $request->Order_Number . "have Submit a Revision";
                 PortalHelpers::sendNotification($request->Order_ID, null, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 5, 9, 10, 11]);
-                return back()->with('Success!' , 'Revision Submited Successfully');
-            }else{
+                return back()->with('Success!', 'Revision Submited Successfully');
+            } else {
                 return back()->with('Error!', 'Revision Not Submited Sucessfully');
             }
-
-
-
-
-        }else{
+        } else {
             return back()->with('Error!', 'File Not Submited Sucessfuyy');
+        }
+    }
 
+
+    public function GetRevisionData(Request $request){
+
+
+        $Order_Revision_details = OrderRevision::with('order_info' , 'attachments')->where('id' , $request->Revision_ID)->first();
+
+        
+        $Order_Description = $Order_Revision_details->Order_Revision;        
+        $Order_Deadline_Date = $Order_Revision_details->order_info->submission_info->DeadLine;
+        $Order_Deadline_Time = $Order_Revision_details->order_info->submission_info->DeadLine_Time;
+
+        $Order_Deadline_File = $Order_Revision_details->attachments;
+
+        $salesAttachment = "";
+        $a = 1;
+
+        foreach ($Order_Deadline_File as $Files) {
+
+            $salesAttachment .= '<tr>
+            <td>' . $a . '</td>
+            <td>' . $Files->File_Name . ' <br>' . $Files->created_at . '</td>
+         
+            <td> 
+                <div class="d-flex justify-content-center">
+                    <a href="' . asset($Files->file_path) . '" class="action-btns1" data-bs-toggle="tooltip" download="' . $Files->File_Name . '" data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-download text-success"></i></a>
+                </div>
+            </td>
+            <td> 
+                <div class="d-flex justify-content-center">
+                    <a  class="action-btns1 delete-edit-revision-files" data-bs-toggle="tooltip" data-id='. $Files->id.'  data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-trash text-danger"></i></a>
+                </div>
+            </td>
+        </tr>';
+
+            $a++;
+        };
+
+        return [
+
+            'Revision_ID' => $Order_Revision_details->id,
+            'Order_ID' => $Order_Revision_details->order_id,
+            'Order_description' => $Order_Description,
+            'Order_Deadline_Date' => $Order_Deadline_Date,
+            'Order_Deadline_Time' => $Order_Deadline_Time,
+            'salesAttachment' => $salesAttachment
+        ];
+
+    }
+
+
+    public function UpdateRevisionOrder(Request $request){
+        DB::beginTransaction();
+
+        try {
+            $OrderRevision = OrderRevision::where('id', $request->Revision_id)->update([
+                'Order_Revision' => $request->Order_Revision
+            ]);
+
+            $Deadline = OrderSubmissionInfo::where('order_id', $request->Order_ID)->update([
+                'DeadLine' => $request->DeadLine,
+                'DeadLine_Time' => $request->DeadLine_Time
+            ]);
+
+            // Handle uploaded files
+            $uploadedFiles = $request->file('files');
+            if ($uploadedFiles) {
+                foreach ($uploadedFiles as $key => $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $filePath = 'Uploads/Revision-Attachments/' . $request->Revision_id . '/' . $fileName;
+
+                    $file->move(public_path('Uploads/Revision-Attachments/' . $request->Revision_id . '/'), $fileName);
+
+                    OrderRevisionAttachments::create([
+                        'File_Name' => $fileName,
+                        'File_Path' => $filePath,
+                        'revision_id' => $request->Revision_id,
+                    ]);
+                }
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return back()->with('Success!', 'Revision Updated Successfully');
+        } catch (\Exception $e) {
+            // Something went wrong, rollback the transaction
+            DB::rollBack();
+
+            return back()->with('Error!', 'Revision Not Updated Successfully');
         }
 
     }
 
 
-    public function GetRevisionAttachment(Request $request)
-    {
-        $Revision_Info = SubmitRevisionAttachment::where('revision_id', $request->Revision_ID)->get();
+    public function DeleteRevisionData(Request $request){
+        
+       $DeleteOrderAttachment =  OrderRevisionAttachments::where('id' ,$request->Row_ID)->delete();
+       if($DeleteOrderAttachment){
+            return ['status' => True];
+       }else{
+         return ['status' => False];
+       }
 
-        $tableHtml = ''; // Initialize an empty string
 
-        foreach ($Revision_Info as $index => $attachment) {
-            $assetUrl = asset($attachment->file_path);
-            $Full_Name = $attachment->UplodedBy->basic_info->F_Name . ' ' . $attachment->UplodedBy->basic_info->L_Name;
-
-            $tableHtml .= '<tr>'; // Append to the existing string
-            $tableHtml .= '<td>' . ($index + 1) . '</td>';
-            $tableHtml .= '<td>' . $attachment->file_name . '<br>' . $attachment->created_at . '</td>';
-            $tableHtml .= '<td>' . $Full_Name . '</td>';
-            $tableHtml .= '<td>';
-            $tableHtml .= '<div class="d-flex justify-content-center">';
-            $tableHtml .= '<a href="' . $assetUrl . '" class="action-btns1" ' .
-                'data-bs-toggle="tooltip" download="' . $attachment->file_name . '" ' .
-                'data-bs-placement="top" title="Download" target="_blank" aria-label="Download">';
-            $tableHtml .= '<i class="feather feather-download text-success"></i>';
-            $tableHtml .= '</a>';
-            $tableHtml .= '</div>';
-            $tableHtml .= '</td>';
-            $tableHtml .= '</tr>';
-        }
-
-        return $tableHtml;
     }
-
-
-
-
-  
 }
