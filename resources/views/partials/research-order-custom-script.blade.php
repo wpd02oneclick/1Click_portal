@@ -32,6 +32,7 @@ $(document).ready(function () {
        
         $('#Revision_view_table').append(data.SalesTableHtml);
         $('#Writer_Submission_view_table').append(data.WriterAttachment);
+        $('#Show_Order_Revision_Words').val(data.send_Revision_word)
         $('#Order_Deadline_Time').val(data.Revision_deadline_Time);
         $('#Order_Deadline_Date').val(data.Revision_deadline_Date);
         $('#revision_details').append(data.Revision_Description);     
@@ -70,6 +71,7 @@ $(document).ready(function () {
     $('.edit-Revision').click(function () {
 
         var Edit_Revision_ID  = $(this).data('id'); 
+        console.log(Edit_Revision_ID);
          $('#Edit_Sales_Revision').html('');  
           $('#summernote2').summernote('code', ''); 
         
@@ -85,13 +87,14 @@ $(document).ready(function () {
 
         success: function (data) {
 
-            console.log(data);
+            console.log(data.Order_Revision_Words);
 
             var date = new Date(data.Order_Deadline_Date);
             var formattedDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
 
             $('#Edit_Revision_ID').val(data.Revision_ID);
             $('#Edit_Revision_Order_ID').val(data.Order_ID);
+            $('#Order_Revision_Words').val(data.Order_Revision_Words);
             $('#summernote2').summernote('code', data.Order_description);
             $('#Edit_Revision_Date').val(formattedDate);
             $('#Edit_Revision_Time').val(data.Order_Deadline_Time);
@@ -107,34 +110,7 @@ $(document).ready(function () {
       });
 
 
-      $(document).on('click' , '.delete-edit-revision-files', function(){
-        var Row_ID = $(this).data('id');
-        console.log(Row_ID);
-
-
-        $.ajax({
-        url: '{{ route('Delete.Revision.Data') }}',
-        type: 'GET',
-        data: {
-
-            'Row_ID': Row_ID  
-        },
-        dataType: 'json',  // Specify the expected data type
-
-        success: function (data) {
-
-           if(data){
-            location.reload();
-
-           }
-            
-        },
-        error: function (xhr, status, error) {
-            console.log('Error:', error);
-        }
-      })
-      });
-
+      
 
     $('#Assign_Words').keyup(function () {
         var Rec_Amount = parseInt($(this).val());

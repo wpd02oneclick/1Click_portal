@@ -327,37 +327,52 @@
                             </div>
                         </div>
                     </div>
-                    @if (!empty($Content_Order->revision))
-                        <div class="tab-pane" id="tab11">
-                            @foreach ($Content_Order->revision as $revision)
-                                <div class="card-body mb-4">
-                                    <div class="col-lg-12">
-                                        {!! $revision->Order_Revision !!}
-                                    </div>
-                                    @if (count($revision->attachments) > 0)
-                                        <h4>Revision Attachments</h4>
-                                        <div class="card-footer">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered text-nowrap border-bottom">
-                                                    <tbody>
-                                                        @foreach ($revision->attachments as $attach)
-                                                            <tr>
-                                                                <td>{{ $attach->File_Name }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset($attach->file_path) }}">Download
-                                                                        File</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                     @if (!empty($Content_Order->revision))
+                <div class="tab-pane" id="tab11">
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+
                         </div>
-                    @endif
+                        <div class="table-responsive">
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">Revised By</th>
+                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Content_Order->revision as $revision)
+                                    <tr>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $revision->revision_by->basic_info->F_Name . ' ' . $revision->revision_by->basic_info->L_Name }}</td>
+                                        <td>{{$revision->created_at}}</td>
+                                        <td>
+                                            <div class="btn-list">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info dropdown-toggle px-5" data-bs-toggle="dropdown">
+                                                        <i class="fe fe-activity me-2"></i>Actions
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+                                                    <a class="dropdown-item edit-Revision" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#EditRevision">Edit Revision</a>
+                                                    <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                @endif
                     @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
 
                         <div class="tab-pane" id="tab12">
@@ -1223,37 +1238,51 @@
                             </div>
                         </div>
                     </div>
-                    @if (!empty($Content_Order->revision))
-                        <div class="tab-pane" id="tab10">
-                            @foreach ($Content_Order->revision as $revision)
-                                <div class="card-body mb-4">
-                                    <div class="col-lg-12">
-                                        {!! $revision->Order_Revision !!}
-                                    </div>
-                                    @if (count($revision->attachments) > 0)
-                                        <h4>Revision Attachments</h4>
-                                        <div class="card-footer">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered text-nowrap border-bottom">
-                                                    <tbody>
-                                                        @foreach ($revision->attachments as $attach)
-                                                            <tr>
-                                                                <td>{{ $attach->File_Name }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset($attach->file_path) }}">Download
-                                                                        File</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                     @if (!empty($Content_Order->revision))
+                <div class="tab-pane" id="tab10">
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+
                         </div>
-                    @endif
+                        <div class="table-responsive">
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">Revised By</th>
+                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Content_Order->revision as $revision)
+                                    <tr>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $revision->revision_by->basic_info->F_Name . ' ' . $revision->revision_by->basic_info->L_Name }}</td>
+                                        <td>{{$revision->created_at}}</td>
+                                        <td>
+                                            <div class="btn-list">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info dropdown-toggle px-5" data-bs-toggle="dropdown">
+                                                        <i class="fe fe-activity me-2"></i>Actions
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+                                                    <a class="dropdown-item edit-Revision" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#EditRevision">Edit Revision</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                @endif
                     @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
 
                         <div class="tab-pane" id="tab12">
@@ -1930,37 +1959,51 @@
                             </div>
                         </div>
                     </div>
-                    @if (!empty($Content_Order->revision))
-                        <div class="tab-pane" id="tab10">
-                            @foreach ($Content_Order->revision as $revision)
-                                <div class="card-body mb-4">
-                                    <div class="col-lg-12">
-                                        {!! $revision->Order_Revision !!}
-                                    </div>
-                                    @if (count($revision->attachments) > 0)
-                                        <h4>Revision Attachments</h4>
-                                        <div class="card-footer">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered text-nowrap border-bottom">
-                                                    <tbody>
-                                                        @foreach ($revision->attachments as $attach)
-                                                            <tr>
-                                                                <td>{{ $attach->File_Name }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset($attach->file_path) }}">Download
-                                                                        File</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                     @if (!empty($Content_Order->revision))
+                <div class="tab-pane" id="tab11">
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+
                         </div>
-                    @endif
+                        <div class="table-responsive">
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">Revised By</th>
+                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Content_Order->revision as $revision)
+                                    <tr>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $revision->revision_by->basic_info->F_Name . ' ' . $revision->revision_by->basic_info->L_Name }}</td>
+                                        <td>{{$revision->created_at}}</td>
+                                        <td>
+                                            <div class="btn-list">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info dropdown-toggle px-5" data-bs-toggle="dropdown">
+                                                        <i class="fe fe-activity me-2"></i>Actions
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+                                                    <a class="dropdown-item edit-Revision" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#EditRevision">Edit Revision</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                @endif
                     @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
@@ -2530,37 +2573,52 @@
                             </div>
                         </div>
                     </div>
-                    @if (empty($Content_Order->revision))
-                        <div class="tab-pane" id="tab11">
-                            @foreach ($Content_Order->revision as $revision)
-                                <div class="card-body mb-4">
-                                    <div class="col-lg-12">
-                                        {!! $revision->Order_Revision !!}
-                                    </div>
-                                    @if (count($revision->attachments) > 0)
-                                        <h4>Revision Attachments</h4>
-                                        <div class="card-footer">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered text-nowrap border-bottom">
-                                                    <tbody>
-                                                        @foreach ($revision->attachments as $attach)
-                                                            <tr>
-                                                                <td>{{ $attach->File_Name }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset($attach->file_path) }}">Download
-                                                                        File</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                     @if (!empty($Content_Order->revision))
+                <div class="tab-pane" id="tab11">
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+
                         </div>
-                    @endif
+                        <div class="table-responsive">
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">Revised By</th>
+                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Content_Order->revision as $revision)
+                                    <tr>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $revision->revision_by->basic_info->F_Name . ' ' . $revision->revision_by->basic_info->L_Name }}</td>
+                                        <td>{{$revision->created_at}}</td>
+                                        <td>
+                                            <div class="btn-list">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info dropdown-toggle px-5" data-bs-toggle="dropdown">
+                                                        <i class="fe fe-activity me-2"></i>Actions
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+
+                                                    <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                @endif
                     @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
 
 
@@ -3215,37 +3273,52 @@
                             </div>
                         </div>
                     </div>
-                    @if (!empty($Content_Order->revision))
-                        <div class="tab-pane" id="tab11">
-                            @foreach ($Content_Order->revision as $revision)
-                                <div class="card-body mb-4">
-                                    <div class="col-lg-12">
-                                        {!! $revision->Order_Revision !!}
-                                    </div>
-                                    @if (count($revision->attachments) > 0)
-                                        <h4>Revision Attachments</h4>
-                                        <div class="card-footer">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered text-nowrap border-bottom">
-                                                    <tbody>
-                                                        @foreach ($revision->attachments as $attach)
-                                                            <tr>
-                                                                <td>{{ $attach->File_Name }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset($attach->file_path) }}">Download
-                                                                        File</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                     @if (!empty($Content_Order->revision))
+                    <div class="tab-pane" id="tab11">
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+
                         </div>
-                    @endif
+                        <div class="table-responsive">
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">Revised By</th>
+                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Content_Order->revision as $revision)
+                                    <tr>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $revision->revision_by->basic_info->F_Name . ' ' . $revision->revision_by->basic_info->L_Name }}</td>
+                                        <td>{{$revision->created_at}}</td>
+                                        <td>
+                                            <div class="btn-list">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info dropdown-toggle px-5" data-bs-toggle="dropdown">
+                                                        <i class="fe fe-activity me-2"></i>Actions
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+
+                                                    <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                @endif
 
                     @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
 
@@ -3731,39 +3804,54 @@
                             </div>
                         </div>
                     </div>
-                    @if (empty($Content_Order->revision))
-                        <div class="tab-pane" id="tab11">
-                            @foreach ($Content_Order->revision as $revision)
-                                <div class="card-body mb-4">
-                                    <div class="col-lg-12">
-                                        {!! $revision->Order_Revision !!}
-                                    </div>
-                                    @if (count($revision->attachments) > 0)
-                                        <h4>Revision Attachments</h4>
-                                        <div class="card-footer">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered text-nowrap border-bottom">
-                                                    <tbody>
-                                                        @foreach ($revision->attachments as $attach)
-                                                            <tr>
-                                                                <td>{{ $attach->File_Name }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset($attach->file_path) }}">Download
-                                                                        File</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-                    @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
+                    @if (!empty($Content_Order->revision))
+                    <div class="tab-pane" id="tab11">
 
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">Revised By</th>
+                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($Content_Order->revision as $revision)
+                                    <tr>
+                                        <td>{{ $loop->iteration}}</td>
+                                        <td>{{ $revision->revision_by->basic_info->F_Name . ' ' . $revision->revision_by->basic_info->L_Name }}</td>
+                                        <td>{{$revision->created_at}}</td>
+                                        <td>
+                                            <div class="btn-list">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info dropdown-toggle px-5" data-bs-toggle="dropdown">
+                                                        <i class="fe fe-activity me-2"></i>Actions
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+
+                                                    <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                @endif
+                  
+                    @if (!empty($Content_Order->submission_info->F_DeadLine) || !empty($Content_Order->submission_info->S_DeadLine) || !empty($Content_Order->submission_info->T_DeadLine))
                         <div class="tab-pane" id="tab12">
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
@@ -4203,9 +4291,344 @@
     </div>
 </div>
 
+<div class="modal fade" id="ViewRevision">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="POST" class="needs-validation was-validated" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">View Revision Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" name="order_id" value="">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="form-label" class="form-label"></label>
+                                <div class="p-2">
+                                    <h4>Order Description</h4>
+                                    <p id="revision_details"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-5">
+                            <label class="form-label">DeadLine</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="feather feather-calendar"></i>
+                                    </div>
+                                </div>
+                                <input class="form-control" id="Order_Deadline_Date" name="DeadLine" type="text" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-5">
+                            <label class="form-label">DeadLine Time</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="feather feather-clock"></span>
+                                    </div>
+                                </div><!-- input-group-prepend -->
+                                <input class="form-control Order-Time" placeholder="Set time" name="DeadLine_Time" type="time" id="Order_Deadline_Time" required readonly>
+                            </div><!-- input-group -->
+                        </div>
+
+                        <div class="col-md-6 mt-5">
+                            <div class="form-group">
+                                <label class="form-label">Additional Words</label>
+                                <input class="form-control mb-4 is-valid" name="Order_Words" placeholder="Enter Order Words" id="Show_Order_Revision_Words" min="0" type="number" required readonly>
+                            </div>
+                        </div>
+                        <div class="table-responsive mt-5">
+                            <h4 class="my-4">Upload by Sales</h4>
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="Revision_view_table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">File Name</th>
+                                        <th class="border-bottom-0">Download File</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive mt-5">
+                            <h4 class="my-4">Upload by Writer</h4>
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="Writer_Submission_view_table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">File Name</th>
+                                        <th class="border-bottom-0">Upload By</th>
+                                        <th class="border-bottom-0">Download File</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="SubmitRevision">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form action="{{route('Submit.Upload.Content.Revision')}}" method="POST" class="needs-validation was-validated" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Revision</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" id="hidden_Revision_ID" name="Revision_ID" value="">
+                        <input type="hidden" name="upload_by" value="{{ Auth::guard('Authorized')->user()->id }}">
+                        <input type="hidden" name="Order_ID" value="{{$Content_Order->id }}">
+                        <input type="hidden" name="Order_Number" value="{{$Content_Order->Order_ID}}">
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="form-label" class="form-label"></label>
+                                <input class="form-control" type="file" name="files[]" multiple>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary btn-block">Submit Revision </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="EditRevision">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+             <form action="{{route('Update.Content.Revision.Order')}}" method="POST" class="needs-validation was-validated" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Revision Deatils</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+               <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" name="Revision_id" value="" id="Edit_Revision_ID">
+                        <input type="hidden" name="Order_ID" id="Edit_Revision_Order_ID" value="">
+                        <input type="hidden" name="revised_by" value="{{ Auth::guard('Authorized')->user()->id }}">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="form-label" class="form-label"></label>
+                                <textarea id="summernote2" class="form-control mb-4 is-invalid state-invalid" name="Order_Revision" placeholder="Textarea (invalid state)"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">DeadLine</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="feather feather-calendar"></i>
+                                    </div>
+                                </div>
+                                <input class="form-control Order-DeadLine" id="Edit_Revision_Date" placeholder="MM/DD/YYYY" name="DeadLine" type="date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">DeadLine Time</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span class="feather feather-clock"></span>
+                                    </div>
+                                </div><!-- input-group-prepend -->
+                                <input class="form-control Order-Time" id="Edit_Revision_Time" placeholder="Set time" name="DeadLine_Time" type="time" required>
+                            </div><!-- input-group -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Additional Words</label>
+                                <input class="form-control mb-4 is-valid" name="Order_Words" placeholder="Enter Order Words" id="Order_Revision_Words" min="0" type="number" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="form-label" class="form-label"></label>
+                                <input class="form-control" type="file" name="files[]" multiple>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive mt-5">
+                            <h4 class="my-4">Revision Attachment</h4>
+                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="Edit_Sales_Revision">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 text-center w-5">No</th>
+                                        <th class="border-bottom-0">File Name</th>
+                                 
+                                        <th class="border-bottom-0">Download File</th>
+                                        <th class="border-bottom-0">Delete File</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-block">Upload Revision</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
+
+
+        $(".Upload_Revision_ID").click(function () {
+        var Revision_ID = $(this).data("id");
+        console.log(Revision_ID);
+
+    $("#hidden_Revision_ID").val(Revision_ID);
+});
+
+$(".Order-Revision-view").click(function () {
+    var Revision_ID = $(this).data("id");
+
+    $("#Revision_view_table tbody").html("");
+    $("#Writer_Submission_view_table tbody").html("");
+    $("#Order_Deadline_Time").val("");
+    $("#Order_Deadline_Date").val("");
+    $("#revision_details").html("");
+
+    $.ajax({
+        url: "{{ route('Get.Revision.Deatils.Attachment') }}",
+        type: "GET",
+        data: {
+            Revision_ID: Revision_ID,
+        },
+        dataType: "json",
+        success: function (data) {
+            $("#Revision_view_table").append(data.SalesTableHtml);
+            $("#Writer_Submission_view_table").append(data.WriterAttachment);
+            $("#Show_Order_Revision_Words").val(data.send_Revision_word);
+            $("#Order_Deadline_Time").val(data.Revision_deadline_Time);
+            $("#Order_Deadline_Date").val(data.Revision_deadline_Date);
+            $("#revision_details").append(data.Revision_Description);
+        },
+
+        error: function (xhr) {
+            var errorMessage = xhr.responseText;
+            console.log("Error message:", errorMessage);
+        },
+    });
+});
+$('.edit-Revision').click(function () {
+
+    var Edit_Revision_ID = $(this).data('id');
+    console.log(Edit_Revision_ID);
+    $('#Edit_Sales_Revision').html('');
+    $('#summernote2').summernote('code', '');
+
+
+    $.ajax({
+        url: '{{ route('Get.Revision.Data') }}',
+        type: 'GET',
+        data: {
+
+            'Revision_ID': Edit_Revision_ID  // Use a colon (:) here, not an equal sign (=)
+        },
+        dataType: 'json',  // Specify the expected data type
+
+        success: function (data) {
+
+            console.log(data.Order_Revision_Words);
+
+            var date = new Date(data.Order_Deadline_Date);
+            var formattedDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+
+            $('#Edit_Revision_ID').val(data.Revision_ID);
+            $('#Edit_Revision_Order_ID').val(data.Order_ID);
+            $('#Order_Revision_Words').val(data.Order_Revision_Words);
+            $('#summernote2').summernote('code', data.Order_description);
+            $('#Edit_Revision_Date').val(formattedDate);
+            $('#Edit_Revision_Time').val(data.Order_Deadline_Time);
+            $('#Edit_Sales_Revision').append(data.salesAttachment);
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error:', error);
+        }
+    });
+});
+$('.Order-Revision').on('click', function () {
+    const getOrder_ID = $(this).find('#Order_ID').val();
+
+    $.ajax({
+        url: '{{ route('Get.Order.Rev.Info') }}'
+                , type: 'GET'
+        , data: {
+            'Order_ID': getOrder_ID
+        }
+        , success: function (data) {
+
+            $('.Order-DeadLine').val(data.Selected_Date);
+            $('.Order-Time').val(data.Selected_Time);
+            $('.Order-Words').val(data.Selected_Words);
+        }
+        , error: function (data) {
+
+        }
+    });
+});
+
+$('#summernote2').summernote({
+    height: 300,
+    toolbar: [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough']],
+        ['para', ['ul', 'ol']],
+        ['table', ['table']],
+        ['insert', ['link']],
+        ['view', ['fullscreen', 'codeview']],
+    ],
+    callbacks: {
+        onInit: function () {
+            console.log('Summernote initialized');
+        },
+        onChange: function (contents, $editable) {
+            console.log('Content changed:', contents);
+        },
+    },
+});
 
         $('.ChangeContentWriter').on('click', function() {
             const getOrder_ID = $(this).find('.order_id').val();
@@ -4266,7 +4689,7 @@
                     $('.Order-Words').val(data.Selected_Words);
                 },
                 error: function(data) {
-                    alert(data.responseJSON);
+                    console.log(data.responseJSON);
                 }
             });
         });

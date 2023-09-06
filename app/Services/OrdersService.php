@@ -21,6 +21,7 @@ use App\Models\ResearchOrders\OrderPaymentInfo;
 use App\Models\ResearchOrders\OrderReferenceInfo;
 use App\Models\ResearchOrders\OrderRevision;
 use App\Models\ResearchOrders\OrderRevisionAttachments;
+use App\Models\ResearchOrders\OrderRevisonWord;
 use App\Models\ResearchOrders\OrderSubmissionInfo;
 use App\Models\ResearchOrders\OrderTask;
 use App\Models\ResearchOrders\OrderTaskSubmit;
@@ -885,6 +886,9 @@ class OrdersService
      */
     private function OrderRevision(Request $request, $orderBasicInfo): RedirectResponse
     {
+
+       
+
         $additionalWords = (float)Str::replace(['$ ', ','], "", $orderBasicInfo->Word_Count) + (float)$request->Order_Words;
         $orderBasicInfo->update([
             'Word_Count' => $additionalWords,
@@ -902,6 +906,11 @@ class OrdersService
             'Order_Revision' => $request->input('Order_Revision'),
             'order_id' => $request->order_id,
             'revised_by' => $request->revised_by,
+        ]);
+
+         $OrderRevisionWords = OrderRevisonWord::create([
+            'Revision_Words' => $request->Order_Words,
+            'Revision_ID' => $orderRevision->id
         ]);
 
         if ($request->hasFile('files')) {
@@ -1186,8 +1195,12 @@ class OrdersService
         $Revision_deadline_Date = $Revision_Info->order_info->submission_info->DeadLine;
         $Revision_deadline_Time = $Revision_Info->order_info->submission_info->DeadLine_Time;
 
-        
 
+        $Revision_Words = OrderRevisonWord::where('Revision_ID', $request->Revision_ID)->first();
+        $send_Revision_word = isset($Revision_Words->Revision_Words) ? (int)$Revision_Words->Revision_Words : 0;
+
+      
+        
 
         // Get Revision Details
         $Sales_Table = OrderRevisionAttachments::where('revision_id', $Revision_ID)->get();
@@ -1233,11 +1246,10 @@ class OrdersService
         }
 
 
-
-
         return [
             'SalesTableHtml' => $SalesAttachment,
             'Revision_Description' => $Revision_Description,
+            'send_Revision_word' =>  $send_Revision_word,
             'Revision_deadline_Date' => $Revision_deadline_Date,
             'Revision_deadline_Time' => $Revision_deadline_Time,
             'WriterAttachment' => $WriterAttachment
@@ -1299,34 +1311,38 @@ class OrdersService
 
         $Order_Deadline_File = $Order_Revision_details->attachments;
 
+
+        $Revision_Words = OrderRevisonWord::where('Revision_ID', $request->Revision_ID)->first();
+        $send_Revision_word = isset($Revision_Words->Revision_Words) ? (int)$Revision_Words->Revision_Words : 0;
+
         $salesAttachment = "";
         $a = 1;
 
         foreach ($Order_Deadline_File as $Files) {
-
             $salesAttachment .= '<tr>
             <td>' . $a . '</td>
             <td>' . $Files->File_Name . ' <br>' . $Files->created_at . '</td>
-         
-            <td> 
+            <td>
                 <div class="d-flex justify-content-center">
                     <a href="' . asset($Files->file_path) . '" class="action-btns1" data-bs-toggle="tooltip" download="' . $Files->File_Name . '" data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-download text-success"></i></a>
                 </div>
             </td>
-            <td> 
+            <td>
                 <div class="d-flex justify-content-center">
-                    <a  class="action-btns1 delete-edit-revision-files" data-bs-toggle="tooltip" data-id='. $Files->id.'  data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-trash text-danger"></i></a>
+                    <a href="' . route('Delete.Revision.Data', ['id' => $Files->id]) . '" class="action-btns1 delete-edit-revision-files"><i class="feather feather-trash text-danger"></i></a>
                 </div>
             </td>
         </tr>';
 
             $a++;
-        };
+        }
+
 
         return [
 
             'Revision_ID' => $Order_Revision_details->id,
             'Order_ID' => $Order_Revision_details->order_id,
+            'Order_Revision_Words' => $send_Revision_word, 
             'Order_description' => $Order_Description,
             'Order_Deadline_Date' => $Order_Deadline_Date,
             'Order_Deadline_Time' => $Order_Deadline_Time,
@@ -1337,12 +1353,51 @@ class OrdersService
 
 
     public function UpdateRevisionOrder(Request $request){
+       
         DB::beginTransaction();
 
         try {
+
+
+            $Order_Total_Word = OrderBasicInfo::where('Order_ID', $request->Order_ID)->first();
+            $New_Revision_Word = OrderRevisonWord::where('Revision_id', $request->Revision_id)->first();
+
+            if ($New_Revision_Word->Revision_Words > $request->Order_Words) {
+
+                $additionalWords = (float)Str::replace(['$ ', ','], "", $Order_Total_Word->Word_Count) - (float)$request->Order_Words;
+
+            }elseif($New_Revision_Word->Revision_Words == $request->Order_Words){
+
+                $additionalWords = $request->Order_Words;
+
+            } else {
+
+                $additionalWords = (float)Str::replace(['$ ', ','], "", $Order_Total_Word->Word_Count) + (float)$request->Order_Words;
+            }
+            
+            $Update_Revision_Words = OrderRevisonWord::where('Revision_id', $request->Revision_id)
+                ->update([
+                    'Revision_Words' => $request->Order_Words
+                ]);
+
+
+            $OrderBasicInfo = OrderBasicInfo::where('order_id', $request->Order_ID)
+                ->update([
+                    'Word_Count' => $additionalWords
+                ]);
+
+          
+
+
+
             $OrderRevision = OrderRevision::where('id', $request->Revision_id)->update([
                 'Order_Revision' => $request->Order_Revision
             ]);
+
+            $OrderBasicInfo1 = OrderBasicInfo::where('order_id', $request->Order_ID)
+                ->update([
+                    'Order_Status' => 3
+                ]);
 
             $Deadline = OrderSubmissionInfo::where('order_id', $request->Order_ID)->update([
                 'DeadLine' => $request->DeadLine,
@@ -1368,6 +1423,10 @@ class OrdersService
 
             // Commit the transaction
             DB::commit();
+            $authUser = Auth::guard('Authorized')->user();
+            $message = $request->Order_ID . " Revision is updated from Sales";
+            PortalHelpers::sendNotification($request->Order_ID, null, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 5, 9, 10, 11]);
+
 
             return back()->with('Success!', 'Revision Updated Successfully');
         } catch (\Exception $e) {
@@ -1380,15 +1439,139 @@ class OrdersService
     }
 
 
-    public function DeleteRevisionData(Request $request){
+    public function DeleteRevisionData($id){
         
-       $DeleteOrderAttachment =  OrderRevisionAttachments::where('id' ,$request->Row_ID)->delete();
+       $DeleteOrderAttachment =  OrderRevisionAttachments::where('id' , $id)->delete();
+
        if($DeleteOrderAttachment){
-            return ['status' => True];
+
+            return back()->with('Success!' , 'Attachment Deleted Sucessfully!');
        }else{
-         return ['status' => False];
+            return back()->with('Error!', 'Attachment Deleted Sucessfully!');
        }
 
+    }
+
+
+    public function UpdateContentRevisionOrder(Request $request)
+    {
+      
+        DB::beginTransaction();
+
+        try {
+            $Order_Total_Word = ContentBasicInfo::where('Order_ID', $request->Order_ID)->first();
+            $New_Revision_Word = OrderRevisonWord::where('Revision_id', $request->Revision_id)->first();
+
+            if ($New_Revision_Word->Revision_Words > $request->Order_Words) {
+
+                $additionalWords = (float)Str::replace(['$ ', ','], "", $Order_Total_Word->Word_Count) - (float)$request->Order_Words;
+            } elseif ($New_Revision_Word->Revision_Words == $request->Order_Words) {
+
+                $additionalWords = $request->Order_Words;
+            } else {
+
+                $additionalWords = (float)Str::replace(['$ ', ','], "", $Order_Total_Word->Word_Count) + (float)$request->Order_Words;
+            }
+
+            $Update_Revision_Words = OrderRevisonWord::where('Revision_id', $request->Revision_id)
+                ->update([
+                    'Revision_Words' => $request->Order_Words
+                ]);
+
+
+            $OrderBasicInfo = OrderBasicInfo::where('order_id', $request->Order_ID)
+                ->update([
+                    'Word_Count' => $additionalWords
+                ]);
+
+
+
+
+
+            $OrderRevision = OrderRevision::where('id', $request->Revision_id)->update([
+                'Order_Revision' => $request->Order_Revision
+            ]);
+
+            $OrderBasicInfo1 = ContentBasicInfo::where('order_id', $request->Order_ID)
+                ->update([
+                    'Order_Status' => 3
+                ]);
+
+            $Deadline = OrderSubmissionInfo::where('order_id', $request->Order_ID)->update([
+                'DeadLine' => $request->DeadLine,
+                'DeadLine_Time' => $request->DeadLine_Time
+            ]);
+
+            // Handle uploaded files
+            $uploadedFiles = $request->file('files');
+            if ($uploadedFiles) {
+                foreach ($uploadedFiles as $key => $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $filePath = 'Uploads/Revision-Attachments/' . $request->Revision_id . '/' . $fileName;
+
+                    $file->move(public_path('Uploads/Revision-Attachments/' . $request->Revision_id . '/'), $fileName);
+
+                    OrderRevisionAttachments::create([
+                        'File_Name' => $fileName,
+                        'File_Path' => $filePath,
+                        'revision_id' => $request->Revision_id,
+                    ]);
+                }
+            }
+
+            // Commit the transaction
+            DB::commit();
+            $authUser = Auth::guard('Authorized')->user();
+            $message = $request->Order_ID . " Revision is updated from Sales";
+            PortalHelpers::sendNotification($request->Order_ID, null, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 8,12, 9, 10, 11]);
+
+
+            return back()->with('Success!', 'Revision Updated Successfully');
+        } catch (\Exception $e) {
+            // Something went wrong, rollback the transaction
+            DB::rollBack();
+
+            return back()->with('Error!', 'Revision Not Updated Successfully');
+        }
+    }
+
+    public function ContentRevisionSubmission(Request $request){
+
+        // dd($request->toArray());
+
+        $uploadedFiles = $request->file('files');
+
+        if ($uploadedFiles) {
+            foreach ($uploadedFiles as $key => $file) {
+                $fileName = $file->getClientOriginalName();
+                $filePath = 'Uploads/Revision-Attachments/' . $request->Revision_ID . '/' . $fileName;
+
+                $file->move(public_path('Uploads/Revision-Attachments/' . $request->Revision_ID . '/'), $fileName);
+
+                SubmitRevisionAttachment::create([
+                    'file_name' => $fileName,
+                    'file_path' => $filePath,
+                    'uploaded_by' => $request->upload_by,
+                    'revision_id' => $request->Revision_ID,
+                ]);
+            }
+            $OrderBasicInfo = ContentBasicInfo::where('order_id', $request->Order_ID)
+                ->update([
+                    'Order_Status' => 2
+                ]);
+
+            if ($OrderBasicInfo) {
+                $authUser = Auth::guard('Authorized')->user();
+                $message = "The Order " . $request->Order_Number . "have Submit a Revision";
+                PortalHelpers::sendNotification($request->Order_ID, null, $message, $authUser->designation->Designation_Name, [$authUser->id], [1, 4, 5, 9, 10, 11]);
+                return back()->with('Success!', 'Revision Submited Successfully');
+            } else {
+                return back()->with('Error!', 'Revision Not Submited Sucessfully');
+            }
+        } else {
+            return back()->with('Error!', 'File Not Submited Sucessfuyy');
+        }
 
     }
+
 }

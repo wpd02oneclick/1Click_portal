@@ -285,7 +285,7 @@ Route::group(['prefix' => 'AJAX'], static function () {
     Route::get('/Get-Client-Info', [AjaxController::class, 'getClientInfo'])->name('Get.Client.Info');
     Route::get('/Get-Task-Revisions', [AjaxController::class, 'getTaskRevisions'])->name('Get.Task.Revisions');
     Route::get('/Get-Edit-Task-Info', [AjaxController::class, 'getEditTaskInfo'])->name('Get.Edit.Task.Info');
-    Route::get('/Get-Order-Rev-Info', [AjaxController::class, 'getOrderInfo'])->name('Get.Order.Rev.Info');
+    Route::get('/Get-Order-Rev-Info', [AjaxController::class, 'getOrder Info'])->name('Get.Order.Rev.Info');
     Route::get('/Get-Content-Writer-Info', [AjaxController::class, 'getContentWriterInfo'])->name('Get.Content.Writer.Info');
 
     // Re-Search Order Chat Routes
@@ -322,15 +322,16 @@ Route::group(['prefix' => 'AJAX'], static function () {
     // Get Portal Errors
     Route::get('/Get-Portal-Errors', [AjaxController::class, 'getPortalErrorFounds'])->name('Get.Portal.Errors');
 
-    Route::get('/Delete-Revision-Data', [OrdersService::class, 'DeleteRevisionData'])->name('Delete.Revision.Data');
+    Route::get('/Delete-Revision-Data/{id}', [OrdersService::class, 'DeleteRevisionData'])->name('Delete.Revision.Data');
 
     
     Route::post('/Update-Revision-Details', [OrdersService::class, 'UpdateRevisionOrder'])->name('Update.Revision.Order');
-    Route::get('/Get-Revision-Data', [OrdersService::class, 'GetRevisionData'])->name('Get.Revision.Data');
+    
+    Route::post('/Update-Content-Revision-Details', [OrdersService::class, 'UpdateContentRevisionOrder'])->name('Update.Content.Revision.Order');
+    Route::post('/Submit-Content-Revision', [OrdersService::class, 'ContentRevisionSubmission'])->name('Submit.Upload.Content.Revision');
+    
     Route::get('/Get-Revision-Details-Attachment', [OrdersService::class, 'GetRevisionDetailsAndAttachment'])->name('Get.Revision.Deatils.Attachment');
-
-
-
+    Route::get('/Get-Revision-Data', [OrdersService::class, 'GetRevisionData'])->name('Get.Revision.Data');
 });
 
 Route::group(['middleware' => ['Authorized'], 'prefix' => 'Trashed'], static function () {

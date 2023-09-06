@@ -305,7 +305,8 @@ $total_words = 0;
                                                     </button>
                                                     <div class="dropdown-menu">
                                                     <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
-
+                                                    <a class="dropdown-item edit-Revision" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#EditRevision">Edit Revision</a>
+                                                    <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -5276,6 +5277,13 @@ $total_words = 0;
                                 <input class="form-control Order-Time" placeholder="Set time" name="DeadLine_Time" type="time" id="Order_Deadline_Time" required readonly>
                             </div><!-- input-group -->
                         </div>
+
+                        <div class="col-md-6 mt-5">
+                            <div class="form-group">
+                                <label class="form-label">Additional Words</label>
+                                <input class="form-control mb-4 is-valid" name="Order_Words" placeholder="Enter Order Words" id="Show_Order_Revision_Words" min="0" type="number" required readonly>
+                            </div>
+                        </div>
                         <div class="table-responsive mt-5">
                             <h4 class="my-4">Upload by Sales</h4>
                             <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="Revision_view_table">
@@ -5402,8 +5410,8 @@ $total_words = 0;
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">Total Words</label>
-                                <input class="form-control mb-4 is-valid" name="Order_Words" placeholder="Enter Order Words" id="Order_Words" min="0" type="number" value="0" required>
+                                <label class="form-label">Additional Words</label>
+                                <input class="form-control mb-4 is-valid" name="Order_Words" placeholder="Enter Order Words" id="Order_Revision_Words" min="0" type="number" required>
                             </div>
                         </div>
                         <div class="col-lg-12">
