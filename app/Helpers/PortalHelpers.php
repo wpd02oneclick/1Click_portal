@@ -163,6 +163,7 @@ class PortalHelpers
         if($Order_Number->Order_Type == 1){
 
             $OrderWord = OrderBasicInfo::select('Word_Count', 'Order_Status')->where('order_id', $Order_ID)->first();
+
         }else{
 
             $OrderWord = ContentBasicInfo::select('Word_Count' , 'Order_Status')->where('order_id', $Order_ID)->first();
@@ -170,6 +171,7 @@ class PortalHelpers
         }
         $client_Name = OrderClientInfo::select('Client_Name')->where('id', $client)->first();
         $data = [
+            'Order_Type' => $Order_Number->Order_Type,
             'client_Name' => $client_Name->Client_Name,
             'Order_Number' => $Order_Number ? $Order_Number->Order_ID : null,
             'Order_Word_Count' => $OrderWord ? $OrderWord->Word_Count : null,

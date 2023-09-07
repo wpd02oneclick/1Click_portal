@@ -258,6 +258,7 @@
                         @php
 
                         $orderData = PortalHelpers::getSomeData($Order['order_id'] , $Order['client_id']);
+                     
                         @endphp
 
 
@@ -267,9 +268,10 @@
                                 <div class="d-flex">
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
-                                            <a href="{{ route('Content.Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
-                                                {{ $orderData['Order_Number'] }}
-                                            </a>
+                                          <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
+                                            {{ $orderData['Order_Number'] }}
+                                          </a>
+
                                         </h6>
                                     </div>
                                 </div>
@@ -334,9 +336,9 @@
                                 <div class="d-flex">
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
-                                            <a href="{{ route('Content.Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
-                                                {{ $orderData['Order_Number'] }}
-                                            </a>
+                                            <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
+                                            {{ $orderData['Order_Number'] }}
+                                          </a>
                                         </h6>
                                     </div>
                                 </div>
@@ -401,9 +403,9 @@
                                 <div class="d-flex">
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
-                                            <a href="{{ route('Content.Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
-                                                {{ $orderData['Order_Number'] }}
-                                            </a>
+                                            <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
+                                            {{ $orderData['Order_Number'] }}
+                                          </a>
                                         </h6>
                                     </div>
                                 </div>
