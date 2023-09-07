@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ContentBasicInfo extends Model
+class  ContentBasicInfo extends Model
 {
     use HasFactory;
     protected $table = "content_basic_infos";

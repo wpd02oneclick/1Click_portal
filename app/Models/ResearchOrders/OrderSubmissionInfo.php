@@ -8,32 +8,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderSubmissionInfo extends Model
-{
-    use HasFactory;
-    protected $table = "order_submission_infos";
-    protected $fillable = [
-        'DeadLine',
-        'DeadLine_Time',
-        'F_DeadLine',
-        'S_DeadLine',
-        'T_DeadLine',
-        'order_id',
-        'user_id',
-        'client_id'
-    ];
-
-    public function authorized_user():belongsTo
+    class OrderSubmissionInfo extends Model
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+        use HasFactory;
+        protected $table = "order_submission_infos";
+        protected $fillable = [
+            'DeadLine',
+            'DeadLine_Time',
+            'F_DeadLine',
+            'S_DeadLine',
+            'T_DeadLine',
+            'order_id',
+            'user_id',
+            'client_id'
+        ];
 
-    public function order_info():belongsTo
-    {
-        return $this->belongsTo(OrderInfo::class, 'order_id', 'user_id');
-    }
+        public function authorized_user():belongsTo
+        {
+            return $this->belongsTo(User::class, 'user_id');
+        }
 
-    // User DB Attribute
+        public function order_info():belongsTo
+        {
+            return $this->belongsTo(OrderInfo::class, 'order_id', 'user_id');
+        }
+
+        // User DB Attribute
     public function deadLine(): Attribute
     {
         return new Attribute(

@@ -4,6 +4,9 @@ namespace App\Helpers;
 
 use App\Models\Auth\User;
 use App\Models\Auth\UserOfficeTiming;
+use App\Models\ContentOrders\ContentBasicInfo;
+use App\Models\ResearchOrders\OrderBasicInfo;
+use App\Models\ResearchOrders\OrderClientInfo;
 use App\Models\ResearchOrders\OrderInfo;
 use App\Notifications\PortalNotifications;
 use Carbon\Carbon;
@@ -152,6 +155,30 @@ class PortalHelpers
         }
         return $status;
     }
+
+
+    public static function getSomeData($Order_ID , $client)
+    {
+        $Order_Number = OrderInfo::select('Order_ID' , 'Order_Type')->where('id', $Order_ID)->first();
+        if($Order_Number->Order_Type == 1){
+
+            $OrderWord = OrderBasicInfo::select('Word_Count', 'Order_Status')->where('order_id', $Order_ID)->first();
+        }else{
+
+            $OrderWord = ContentBasicInfo::select('Word_Count' , 'Order_Status')->where('order_id', $Order_ID)->first();
+
+        }
+        $client_Name = OrderClientInfo::select('Client_Name')->where('id', $client)->first();
+        $data = [
+            'client_Name' => $client_Name->Client_Name,
+            'Order_Number' => $Order_Number ? $Order_Number->Order_ID : null,
+            'Order_Word_Count' => $OrderWord ? $OrderWord->Word_Count : null,
+            'Order_Status' => $OrderWord ? $OrderWord->Order_Status : null,
+        ];
+
+        return $data;
+    }
+
 
     public static function getOrderType($Order_ID): ?int
     {

@@ -6,10 +6,14 @@ use App\Models\Attendance\Attendance;
 use App\Models\Auth\User;
 use App\Models\LeaveEntitlements\UserLeaveQuota;
 use App\Models\Notice\NoticeBoard;
+use App\Models\ResearchOrders\OrderInfo;
+use App\Models\ResearchOrders\OrderSubmissionInfo;
 use App\Services\OrdersService;
 use App\Services\ResearchOrderService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,6 +31,80 @@ class Dashboard extends Component
 
     public function render()
     {
+        $todayDate = Carbon::now()->toDateString(); // Example date, replace with Carbon::now()->toDateString() for the current date.
+
+        $Today_orders_F_Deadline =  OrderSubmissionInfo::select('F_DeadLine', 'client_id', 'order_id')->whereDate('F_DeadLine',  $todayDate)
+        ->get();
+
+        $Today_orders_Deadline =  OrderSubmissionInfo::select('DeadLine', 'client_id', 'order_id')->whereDate('DeadLine',  $todayDate)
+        ->get();
+
+        $Today_orders_S_Deadline =  OrderSubmissionInfo::select('S_DeadLine', 'client_id', 'order_id')->whereDate('S_DeadLine',  $todayDate)
+        ->get();
+
+        $Today_orders_T_Deadline =  OrderSubmissionInfo::select('T_DeadLine', 'client_id', 'order_id')->whereDate('T_DeadLine',  $todayDate)
+        ->get();
+
+        // Merge the results into a single array
+        $OrdersToday = $Today_orders_F_Deadline
+        ->concat($Today_orders_Deadline)
+        ->concat($Today_orders_S_Deadline)
+        ->concat($Today_orders_T_Deadline)
+        ->toArray();
+        // dd($OrdersToday);
+
+        $tomorrowDate = Carbon::tomorrow()->toDateString();
+
+        $Tomorrow_orders_F_Deadline =  OrderSubmissionInfo::select('F_DeadLine', 'client_id', 'order_id')->whereDate('F_DeadLine',  $tomorrowDate)
+        ->get();
+
+        $Tomorrow_orders_Deadline =  OrderSubmissionInfo::select('DeadLine', 'client_id', 'order_id')->whereDate('DeadLine',  $tomorrowDate)
+        ->get();
+
+        $Tomorrow_orders_S_Deadline =  OrderSubmissionInfo::select('S_DeadLine', 'client_id', 'order_id')->whereDate('S_DeadLine',  $tomorrowDate)
+        ->get();
+
+        $Tomorrow_orders_T_Deadline =  OrderSubmissionInfo::select('T_DeadLine', 'client_id', 'order_id')->whereDate('T_DeadLine',  $tomorrowDate)
+        ->get();
+
+        // Merge the results into a single array
+        $OrdersTomorrow = $Tomorrow_orders_F_Deadline
+        ->concat($Tomorrow_orders_Deadline)
+        ->concat($Tomorrow_orders_S_Deadline)
+        ->concat($Tomorrow_orders_T_Deadline)
+        ->toArray();
+
+
+        $todayDate = Carbon::now()->toDateString();
+
+        // Get orders with deadlines before today
+        $Past_orders_F_Deadline = OrderSubmissionInfo::select('F_DeadLine', 'client_id', 'order_id')
+        ->whereDate('F_DeadLine', '<', $todayDate)
+        ->get();
+
+        $Past_orders_Deadline = OrderSubmissionInfo::select('DeadLine', 'client_id', 'order_id')
+        ->whereDate('DeadLine', '<', $todayDate)
+        ->get();
+
+        $Past_orders_S_Deadline = OrderSubmissionInfo::select('S_DeadLine', 'client_id', 'order_id')
+        ->whereDate('S_DeadLine', '<', $todayDate)
+        ->get();
+
+        $Past_orders_T_Deadline = OrderSubmissionInfo::select('T_DeadLine', 'client_id', 'order_id')
+        ->whereDate('T_DeadLine', '<', $todayDate)
+        ->get();
+
+        // Merge the results into a single array
+        $OrdersPast = $Past_orders_F_Deadline
+        ->concat($Past_orders_Deadline)
+        ->concat($Past_orders_S_Deadline)
+        ->concat($Past_orders_T_Deadline)
+        ->toArray();
+
+
+
+       
+
         $today = Carbon::now();
         $tomorrow = Carbon::tomorrow();
         $threeHoursLeft = Carbon::now()->subHours(3);
@@ -58,6 +136,10 @@ class Dashboard extends Component
         $Leave_Quota = UserLeaveQuota::where('user_id', $auth_user->id)->first();
         $Get_Notice = NoticeBoard::latest('id')->get();
 
-        return view('livewire.dashboard', compact('Previous_Order', 'Today_Order', 'Tomorrow_Order', 'auth_user', 'Final_DeadLines', 'deadline_times', 'statusCountsFlat', 'auth_user', 'empCount', 'lastAttendanceID', 'Leave_Quota', 'Get_Notice'))->layout('layouts.authorized');
+
+
+
+
+        return view('livewire.dashboard', compact('OrdersToday', 'OrdersPast','OrdersTomorrow','Previous_Order', 'Today_Order', 'Tomorrow_Order', 'auth_user', 'Final_DeadLines', 'deadline_times', 'statusCountsFlat', 'auth_user', 'empCount', 'lastAttendanceID', 'Leave_Quota', 'Get_Notice'))->layout('layouts.authorized');
     }
 }
