@@ -210,7 +210,7 @@
 <!-- End Row-->
 
 
-@if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
+@if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11 || (int) $auth_user->Role_ID === 4)
 <div class="row">
     <div class="col-xl-3 col-md-12 col-lg-12">
         <div class="card" style="height: auto !important;">
@@ -241,12 +241,17 @@
     <div class="panel-body tabs-menu-body table_tabs1 pt-5 p-3 border-0">
         <div class="tab-content">
             <div class="tab-pane p-3 active" id="tab6">
-                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0"  id="DataTable-4">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-4">
                     <thead>
                         <tr>
                             <th class="wd-10p border-bottom-0">S.No</th>
                             <th class="wd-10p border-bottom-0">Order Code</th>
+                            @if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
                             <th class="wd-10p border-bottom-0">Client</th>
+                            @endif
+                            @if ((int) $auth_user->Role_ID === 4)
+                            <th class="wd-10p border-bottom-0">Order Type</th>
+                            @endif
                             <th class="w-15p border-bottom-0">Words Count</th>
                             <th class="wd-20p border-bottom-0">Deadline</th>
                             <th class="wd-25p border-bottom-0">Status</th>
@@ -258,25 +263,29 @@
                         @php
 
                         $orderData = PortalHelpers::getSomeData($Order['order_id'] , $Order['client_id']);
-                     
+
                         @endphp
-
-
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
                                 <div class="d-flex">
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
-                                          <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
-                                            {{ $orderData['Order_Number'] }}
-                                          </a>
+                                            <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
+                                                {{ $orderData['Order_Number'] }}
+                                            </a>
 
                                         </h6>
                                     </div>
                                 </div>
                             </td>
+                            @if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
                             <td>{{$orderData['client_Name']}}</td>
+                            @endif
+                            @if ((int) $auth_user->Role_ID === 4 )
+                            <td>{{ $orderData['Order_Type'] == 2 ? 'Content Writing Order' : 'Reseacrh Writing Order' }}</td>
+                            @endif
+
                             <td>{{$orderData['Order_Word_Count']}}</td>
                             <td>
                                 @if(isset($Order['T_DeadLine']))
@@ -315,7 +324,12 @@
                         <tr>
                             <th class="wd-10p border-bottom-0">S.No</th>
                             <th class="wd-10p border-bottom-0">Order Code</th>
+                            @if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
                             <th class="wd-10p border-bottom-0">Client</th>
+                            @endif
+                            @if ((int) $auth_user->Role_ID === 4)
+                            <th class="wd-10p border-bottom-0">Order Type</th>
+                            @endif
                             <th class="w-15p border-bottom-0">Words Count</th>
                             <th class="wd-20p border-bottom-0">Deadline</th>
                             <th class="wd-25p border-bottom-0">Status</th>
@@ -337,13 +351,18 @@
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
                                             <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
-                                            {{ $orderData['Order_Number'] }}
-                                          </a>
+                                                {{ $orderData['Order_Number'] }}
+                                            </a>
                                         </h6>
                                     </div>
                                 </div>
                             </td>
+                            @if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
                             <td>{{$orderData['client_Name']}}</td>
+                            @endif
+                            @if ((int) $auth_user->Role_ID === 4 )
+                            <td>{{ $orderData['Order_Type'] == 2 ? 'Content Writing Order' : 'Reseacrh Writing Order' }}</td>
+                            @endif
                             <td>{{$orderData['Order_Word_Count']}}</td>
                             <td>
                                 @if(isset($Order['T_DeadLine']))
@@ -382,7 +401,12 @@
                         <tr>
                             <th class="wd-10p border-bottom-0">S.No</th>
                             <th class="wd-10p border-bottom-0">Order Code</th>
+                            @if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
                             <th class="wd-10p border-bottom-0">Client</th>
+                            @endif
+                            @if ((int) $auth_user->Role_ID === 4)
+                            <th class="wd-10p border-bottom-0">Order Type</th>
+                            @endif
                             <th class="w-15p border-bottom-0">Words Count</th>
                             <th class="wd-20p border-bottom-0">Deadline</th>
                             <th class="wd-25p border-bottom-0">Status</th>
@@ -404,13 +428,18 @@
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
                                             <a href="{{ route(($orderData['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $orderData['Order_Number']]) }}">
-                                            {{ $orderData['Order_Number'] }}
-                                          </a>
+                                                {{ $orderData['Order_Number'] }}
+                                            </a>
                                         </h6>
                                     </div>
                                 </div>
                             </td>
+                            @if ((int) $auth_user->Role_ID === 1 || (int) $auth_user->Role_ID === 9 || (int) $auth_user->Role_ID === 10 || (int) $auth_user->Role_ID === 11)
                             <td>{{$orderData['client_Name']}}</td>
+                            @endif
+                            @if ((int) $auth_user->Role_ID === 4 )
+                            <td>{{ $orderData['Order_Type'] == 2 ? 'Content Writing Order' : 'Reseacrh Writing Order' }}</td>
+                            @endif
                             <td>{{$orderData['Order_Word_Count']}}</td>
                             <td>
                                 @if(isset($Order['T_DeadLine']))
@@ -443,10 +472,678 @@
                     </tbody>
                 </table>
             </div>
-          
+
         </div>
     </div>
 </div>
+@endif
+
+
+
+
+@if ((int) $auth_user->Role_ID === 5 )
+<div class="row">
+    <div class="col-xl-3 col-md-12 col-lg-12">
+        <div class="card" style="height: auto !important;">
+            <div class="card-header border-0">
+                <h4 class="card-title">Final DeadLines</h4>
+            </div>
+            <div class="list-group" id="Deadlines" style="overflow-y: scroll !important; max-height: 500px !important; ">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card overflow-hidden">
+    <div class="card-header border-0">
+        <h4 class="card-title">Deadline Orders</h4>
+    </div>
+    <div class="tab-menu-heading jobtable-tabs pt-3 p-0 ">
+        <div class="tabs-menu1">
+            <!-- Tabs -->
+            <ul class="nav panel-tabs">
+                <li><a href="#tab5" data-bs-toggle="tab">Previous Orders</a></li>
+                <li><a href="#tab6" class="active" data-bs-toggle="tab">Today Orders</a></li>
+                <li><a href="#tab7" data-bs-toggle="tab">Tomorrow Orders</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body tabs-menu-body table_tabs1 pt-5 p-3 border-0">
+        <div class="tab-content">
+            <div class="tab-pane p-3 " id="tab5">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-3">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                        //dd($CordinatorTodayAll);
+                        @endphp
+                        @forelse($CordinatorPreviousAll as $Order)
+
+                        @php
+
+                        //dd($Order);
+                        $C_orderData = PortalHelpers::getCordinatorData($Order['id'] , $Order['Order_Type']);
+                        @endphp
+
+
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route(($Order['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $Order['id']]) }}">
+                                                {{ $Order['Order_ID']}}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{$C_orderData['word_Count']}}</td>
+                            <td>
+                                @if(isset($Order['submission_info']['DeadLine']))
+                                {{ $Order['submission_info']['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['submission_info']['F_DeadLine']))
+                                {{ $Order['submission_info']['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['submission_info']['S_DeadLine']))
+                                {{ $Order['submission_info']['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['submission_info']['T_DeadLine']))
+                                {{ $Order['submission_info']['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @endif
+                            </td>
+
+                            <td>{{$C_orderData['Order_Status']}}</td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3 active" id="tab6">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-3">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                        //dd($CordinatorTodayAll);
+                        @endphp
+                        @forelse($CordinatorTodayAll as $Order)
+
+                        @php
+
+                        //dd($Order);
+                        $C_orderData = PortalHelpers::getCordinatorData($Order['id'] , $Order['Order_Type']);
+                        @endphp
+
+
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route(($Order['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $Order['id']]) }}">
+                                                {{ $Order['Order_ID']}}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{$C_orderData['word_Count']}}</td>
+                            <td>
+                                @if(isset($Order['submission_info']['DeadLine']))
+                                {{ $Order['submission_info']['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['submission_info']['F_DeadLine']))
+                                {{ $Order['submission_info']['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['submission_info']['S_DeadLine']))
+                                {{ $Order['submission_info']['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['submission_info']['T_DeadLine']))
+                                {{ $Order['submission_info']['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @endif
+                            </td>
+
+                            <td>{{$C_orderData['Order_Status']}}</td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3" id="tab7">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-3">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                        //dd($CordinatorTodayAll);
+                        @endphp
+                        @forelse($CordinatorTomorrowAll as $Order)
+
+                        @php
+
+                        //dd($Order);
+                        $C_orderData = PortalHelpers::getCordinatorData($Order['id'] , $Order['Order_Type']);
+                        @endphp
+
+
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route(($Order['Order_Type'] == 2) ? 'Content.Order.Details' : 'Order.Details', ['Order_ID' => $Order['id']]) }}">
+                                                {{ $Order['Order_ID']}}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{$C_orderData['word_Count']}}</td>
+                            <td>
+                                @if(isset($Order['submission_info']['DeadLine']))
+                                {{ $Order['submission_info']['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['submission_info']['F_DeadLine']))
+                                {{ $Order['submission_info']['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['submission_info']['S_DeadLine']))
+                                {{ $Order['submission_info']['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['submission_info']['T_DeadLine']))
+                                {{ $Order['submission_info']['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @endif
+                            </td>
+
+                            <td>{{$C_orderData['Order_Status']}}</td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+@endif
+
+@if((int)$auth_user->Role_ID === 6 )
+
+<div class="row">
+    <div class="col-xl-3 col-md-12 col-lg-12">
+        <div class="card" style="height: auto !important;">
+            <div class="card-header border-0">
+                <h4 class="card-title">Final DeadLines</h4>
+            </div>
+            <div class="list-group" id="Deadlines" style="overflow-y: scroll !important; max-height: 500px !important; ">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card overflow-hidden">
+    <div class="card-header border-0">
+        <h4 class="card-title">Deadline Orders</h4>
+    </div>
+    <div class="tab-menu-heading jobtable-tabs pt-3 p-0 ">
+        <div class="tabs-menu1">
+            <!-- Tabs -->
+            <ul class="nav panel-tabs">
+                <li><a href="#tab5" data-bs-toggle="tab">Previous Orders</a></li>
+                <li><a href="#tab6" class="active" data-bs-toggle="tab">Today Orders</a></li>
+                <li><a href="#tab7" data-bs-toggle="tab">Tomorrow Orders</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body tabs-menu-body table_tabs1 pt-5 p-3 border-0">
+        <div class="tab-content">
+            <div class="tab-pane p-3" id="tab5">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-3">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @php
+                        //dd($WriterPreviousOrder->toArray());
+                        @endphp
+                        @forelse($WriterPreviousOrder as $Order)
+                        @foreach($Order['tasks'] as $task)
+                        <tr>
+                            <td>{{ $loop->parent->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $task['Assign_Words'] }}</td>
+                            <td>
+                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                            </td>
+                            <td>
+
+
+                                {{ $task['Task_Status'] }} <!-- Display the actual value for debugging -->
+
+                            </td>
+
+                        </tr>
+                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3 active" id="tab6">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-2">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @php
+                        //dd($WriterTodayOrder->toArray());
+                        @endphp
+                        @forelse($WriterTodayOrder as $Order)
+                        @foreach($Order['tasks'] as $task)
+                        <tr>
+                            <td>{{ $loop->parent->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $task['Assign_Words'] }}</td>
+                            <td>
+                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                            </td>
+                            <td>
+                                {{ $task['Task_Status']}}
+
+                            </td>
+                        </tr>
+                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3" id="tab7">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-1">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @php
+                        //dd($WriterTodayOrder->toArray());
+                        @endphp
+                        @forelse($WriterTomorrowOrder as $Order)
+                        @foreach($Order['tasks'] as $task)
+                        <tr>
+                            <td>{{ $loop->parent->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $task['Assign_Words'] }}</td>
+                            <td>
+                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                            </td>
+                            <td>
+                                {{$task['Task_Status']}}
+                            </td>
+                        </tr>
+                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@endif
+
+
+@if((int)$auth_user->Role_ID === 8 || (int)$auth_user->Role_ID === 12 )
+
+<div class="row">
+    <div class="col-xl-3 col-md-12 col-lg-12">
+        <div class="card" style="height: auto !important;">
+            <div class="card-header border-0">
+                <h4 class="card-title">Final DeadLines</h4>
+            </div>
+            <div class="list-group" id="Deadlines" style="overflow-y: scroll !important; max-height: 500px !important; ">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card overflow-hidden">
+    <div class="card-header border-0">
+        <h4 class="card-title">Deadline Orders</h4>
+    </div>
+    <div class="tab-menu-heading jobtable-tabs pt-3 p-0 ">
+        <div class="tabs-menu1">
+            <!-- Tabs -->
+            <ul class="nav panel-tabs">
+                <li><a href="#tab5" data-bs-toggle="tab">Previous Orders</a></li>
+                <li><a href="#tab6" class="active" data-bs-toggle="tab">Today Orders</a></li>
+                <li><a href="#tab7" data-bs-toggle="tab">Tomorrow Orders</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body tabs-menu-body table_tabs1 pt-5 p-3 border-0">
+        <div class="tab-content">
+            <div class="tab-pane p-3" id="tab5">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-3">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @php
+                        //dd($WriterPreviousOrder->toArray());
+                        @endphp
+                        @forelse($WriterPreviousOrder as $Order)
+                        @foreach($Order['tasks'] as $task)
+                        <tr>
+                            <td>{{ $loop->parent->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $task['Assign_Words'] }}</td>
+                            <td>
+                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                            </td>
+                            <td>
+
+
+                                {{ $task['Task_Status'] }} <!-- Display the actual value for debugging -->
+
+                            </td>
+
+                        </tr>
+                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3 active" id="tab6">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-2">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>                  
+
+                        @forelse($ContentTodayAll as $Order)
+                        @php
+                        $ContentWriterData = PortalHelpers::getContentWriterData($Order['id'])
+                        @endphp
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Content.Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $ContentWriterData['word_Count'] }}</td>
+                            <td>
+                                @if(isset($Order['DeadLine']))
+                                {{ $Order['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['F_DeadLine']))
+                                {{ $Order['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['S_DeadLine']))
+                                {{ $Order['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['T_DeadLine']))
+                                {{ $Order['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @else
+                                
+                                No Deadline
+                                @endif
+                            </td>
+                            <td>
+                                {{ $ContentWriterData['Order_Status'] }}
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3" id="tab7">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-1">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @php
+                        //dd($WriterTodayOrder->toArray());
+                        @endphp
+                        @forelse($WriterTomorrowOrder as $Order)
+                        @foreach($Order['tasks'] as $task)
+                        <tr>
+                            <td>{{ $loop->parent->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $task['Assign_Words'] }}</td>
+                            <td>
+                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                            </td>
+                            <td>
+                                {{$task['Task_Status']}}
+                            </td>
+                        </tr>
+                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endif
 
 <!-- =================== HR Dashboard ======================== -->

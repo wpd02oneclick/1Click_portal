@@ -257,14 +257,19 @@ class OrdersService
     private function getAssignID($Order_Service): int|null
     {
         $skill = WriterSkills::where('Skill_Name', $Order_Service)->firstOrFail();
+        
         $users_ids = User::where('Skill_ID', $skill->id)->pluck('id');
 
+        // dd($users_ids);
+       
         if (isset($users_ids)) {
+
             $assign_ids = OrderInfo::whereRelation('content_info', static function ($q) use ($Order_Service) {
                 $q->where('Order_Status', '<>', 2)->where('Order_Services', $Order_Service);
             })->where('Order_Type', 2)->pluck('assign_id');
-
+            
             $users_ids_not_assigned = $users_ids->diff($assign_ids);
+            
 
             if ($users_ids_not_assigned->count() === 0) {
                 $assign_ids_with_min_order_count = OrderInfo::whereIn('assign_id', $assign_ids)
@@ -276,12 +281,14 @@ class OrdersService
                     ->orderBy('order_count')
                     ->pluck('assign_id')
                     ->take(1);
-
+               
+                
                 if ($assign_ids_with_min_order_count->count() > 0) {
                     return $assign_ids_with_min_order_count->first();
                 }
                 return null;
             }
+            //dd($users_ids_not_assigned->random());
             return $users_ids_not_assigned->random();
         }
         return null;

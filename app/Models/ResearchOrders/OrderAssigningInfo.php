@@ -13,4 +13,7 @@ class OrderAssigningInfo extends Model
         'order_id',
         'assign_id',
     ];
+    
+
+    
 }

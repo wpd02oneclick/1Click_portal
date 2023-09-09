@@ -167,7 +167,6 @@ class User extends Authenticatable
     }
 
 
-
     // User DB Attribute
     public function createdAt(): Attribute
     {

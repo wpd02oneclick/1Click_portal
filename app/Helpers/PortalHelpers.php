@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Notification;
 use InvalidArgumentException;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use PDO;
 
 class PortalHelpers
 {
@@ -154,6 +155,30 @@ class PortalHelpers
             return 'Partial';
         }
         return $status;
+    }
+
+    public static function getContentWriterData($Order_ID){
+
+        // dd($Order_ID);
+        $data  = OrderBasicInfo::select('Order_Status', 'Word_Count')->where('order_id' , $Order_ID)->first();
+        dd($data);
+        return [
+            'Order_Status'  => $data->Order_Status,
+            'Word_Count'  => $data->Word_Count
+        ];
+    }
+
+    public static function getCordinatorData($id , $Order_Type){
+        if($Order_Type == 2 ){
+            $wordCount = ContentBasicInfo::select('Word_Count' , 'Order_Status')->where('order_id', $id)->first();
+        }else{
+            $wordCount = OrderBasicInfo::select('Word_Count', 'Order_Status')->where('order_id', $id)->first();
+        }
+        return [
+            'word_Count' => $wordCount->Word_Count,
+            'Order_Status' => $wordCount->Order_Status
+        ];
+
     }
 
 
