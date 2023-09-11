@@ -159,9 +159,8 @@ class PortalHelpers
 
     public static function getContentWriterData($Order_ID){
 
-        // dd($Order_ID);
-        $data  = OrderBasicInfo::select('Order_Status', 'Word_Count')->where('order_id' , $Order_ID)->first();
-        dd($data);
+        $data  = ContentBasicInfo::select('Word_Count', 'Order_Status')->where('order_id' , $Order_ID)->first();
+        
         return [
             'Order_Status'  => $data->Order_Status,
             'Word_Count'  => $data->Word_Count

@@ -27,8 +27,7 @@
 <script src="{{ asset('assets/plugins/time-picker/jquery.timepicker.js') }}"></script>
 <script src="{{ asset('assets/plugins/time-picker/toggles.min.js') }}"></script>
 <!-- Chart scripts -->
-<script src="{{ asset('assets/plugins/chart.min/chart.min.js') }}"></script>
-<script src="{{ asset('assets/plugins/chart.min/rounded-barchart.js') }}"></script>
+
 <!-- Data tables -->
 <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>

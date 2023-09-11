@@ -49,7 +49,7 @@ $total_words = 0;
                     </li>
                     <li><a href="#tab7" data-bs-toggle="tab">Order Attachments</a></li>
                     <li><a href="#tab8" data-bs-toggle="tab">Assign Task</a></li>
-                    <li><a href="#tab9" data-bs-toggle="tab">Writer Submission</a></li>
+
                     <li><a href="#tab10" data-bs-toggle="tab">Final Submission</a></li>
                     @if (!empty($Research_Order->revision))
                     <li><a href="#tab11" data-bs-toggle="tab">Order Revisions</a></li>
@@ -188,50 +188,7 @@ $total_words = 0;
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab9">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0 text-center w-5">No</th>
-                                        <th class="border-bottom-0">File Name</th>
-                                        <th class="border-bottom-0">Download File</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($Research_Order->tasks as $task)
-                                    @forelse($task->submit_info as $submission)
-                                    <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <a href="{{ asset($submission->task_file_path) }}" target="_blank" download class="font-weight-semibold fs-14 mt-5">{{ $submission->File_Name }}
-                                                <span class="text-muted ms-2">(23 KB)</span></a>
-                                            <div class="clearfix"></div>
-                                            <small class="text-muted">{{ $submission->created_at }} -
-                                                Submitted
-                                                By
-                                                {{ $submission->submitted->basic_info->full_name }}</small>
-                                        </td>
 
-                                        <td>
-                                            <div class="d-flex justify-content-center">
-                                                <a href="{{ asset($submission->task_file_path) }}" class="action-btns1" data-bs-toggle="tooltip" download data-bs-placement="top" title="Download" target="_blank"><i class="feather feather-download   text-success"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    @endforelse
-                                    @empty
-                                    <tr>
-                                        <td colspan="3">Files are Not Attached</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
                 <div class="tab-pane" id="tab10">
                     <div class="card-body">
                         <div class="d-flex justify-content-end">
@@ -304,9 +261,9 @@ $total_words = 0;
                                                         <i class="fe fe-activity me-2"></i>Actions
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                    <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
-                                                    <a class="dropdown-item edit-Revision" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#EditRevision">Edit Revision</a>
-                                                    <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                        <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+                                                        <a class="dropdown-item edit-Revision" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#EditRevision">Edit Revision</a>
+                                                        <a class="dropdown-item Order-Revision Upload_Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2315,7 +2272,7 @@ $total_words = 0;
                             Description</a></li>
                     <li><a href="#tab7" data-bs-toggle="tab">Order Attachments</a></li>
                     <li><a href="#tab8" data-bs-toggle="tab"> Assign Task</a></li>
-                    <li><a href="#tab9" data-bs-toggle="tab">Writer Submission</a></li>
+                   
                     <li><a href="#tab10" data-bs-toggle="tab">Final Submission</a></li>
                     @if (!empty($Research_Order->revision))
                     <li><a href="#tab11" data-bs-toggle="tab">Order Revisions</a></li>
@@ -2458,50 +2415,7 @@ $total_words = 0;
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab9">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0 text-center w-5">No</th>
-                                        <th class="border-bottom-0">File Name</th>
-                                        <th class="border-bottom-0">Download File</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($Research_Order->tasks as $task)
-                                    @forelse($task->submit_info as $submission)
-                                    <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <a href="{{ asset($submission->task_file_path) }}" target="_blank" download class="font-weight-semibold fs-14 mt-5">{{ $submission->File_Name }}
-                                                <span class="text-muted ms-2">(23 KB)</span></a>
-                                            <div class="clearfix"></div>
-                                            <small class="text-muted">{{ $submission->created_at }} -
-                                                Submitted
-                                                By
-                                                {{ $submission->submitted->basic_info->full_name }}</small>
-                                        </td>
-
-                                        <td>
-                                            <div class="d-flex justify-content-center">
-                                                <a href="{{ asset($submission->task_file_path) }}" class="action-btns1" data-bs-toggle="tooltip" data-bs-placement="top" title="Download" download target="_blank"><i class="feather feather-download   text-success"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    @endforelse
-                                    @empty
-                                    <tr>
-                                        <td colspan="3">Files are Not Attached</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="tab-pane" id="tab10">
                     <div class="card-body">
                         <div class="d-flex justify-content-end">
@@ -2574,7 +2488,7 @@ $total_words = 0;
                                                     </button>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item Order-Revision-view" id="Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
-                                                        <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                        <a class="dropdown-item Order-Revision Upload_Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
 
                                                     </div>
                                                 </div>
@@ -3284,7 +3198,7 @@ $total_words = 0;
                             Description</a></li>
                     <li><a href="#tab7" data-bs-toggle="tab">Order Attachments</a></li>
                     <li><a href="#tab8" data-bs-toggle="tab">Assign Task</a></li>
-                    <li><a href="#tab9" data-bs-toggle="tab">Writer Submission</a></li>
+                    
                     <li><a href="#tab10" data-bs-toggle="tab">Final Submission</a></li>
                     @if (!empty($Research_Order->revision))
                     <li><a href="#tab11" data-bs-toggle="tab">Order Revisions</a></li>
@@ -3425,50 +3339,7 @@ $total_words = 0;
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab9">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0 text-center w-5">No</th>
-                                        <th class="border-bottom-0">File Name</th>
-                                        <th class="border-bottom-0">Download File</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($Research_Order->tasks as $task)
-                                    @forelse($task->submit_info as $submission)
-                                    <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <a href="{{ asset($submission->task_file_path) }}" target="_blank" download class="font-weight-semibold fs-14 mt-5">{{ $submission->File_Name }}
-                                                <span class="text-muted ms-2">(23 KB)</span></a>
-                                            <div class="clearfix"></div>
-                                            <small class="text-muted">{{ $submission->created_at }} -
-                                                Submitted
-                                                By
-                                                {{ $submission->submitted->basic_info->full_name }}</small>
-                                        </td>
-
-                                        <td>
-                                            <div class="d-flex justify-content-center">
-                                                <a href="{{ asset($submission->task_file_path) }}" class="action-btns1" data-bs-toggle="tooltip" data-bs-placement="top" title="Download" download target="_blank"><i class="feather feather-download   text-success"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    @endforelse
-                                    @empty
-                                    <tr>
-                                        <td colspan="3">Files are Not Attached</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+               
                 <div class="tab-pane" id="tab10">
                     <div class="card-body">
                         <div class="d-flex justify-content-end">
@@ -3541,8 +3412,8 @@ $total_words = 0;
                                                         <i class="fe fe-activity me-2"></i>Actions
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item Order-Revision-view"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
-                                                        <a class="dropdown-item Order-Revision Upload_Revision_ID"  data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
+                                                        <a class="dropdown-item Order-Revision-view" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#ViewRevision">View Revision</a>
+                                                        <a class="dropdown-item Order-Revision Upload_Revision_ID" data-id="{{ $revision->id }}" href="JavaScript:void(0);" data-bs-toggle="modal" data-bs-target="#SubmitRevision">Upload Revision</a>
 
                                                     </div>
                                                 </div>
@@ -4235,7 +4106,7 @@ $total_words = 0;
                             Description</a></li>
                     <li><a href="#tab7" data-bs-toggle="tab">Order Attachments</a></li>
                     <li><a href="#tab8" data-bs-toggle="tab">Order Assign Task</a></li>
-                    <li><a href="#tab9" data-bs-toggle="tab">Writer Submission</a></li>
+                    
                 </ul>
             </div>
         </div>
@@ -4344,50 +4215,7 @@ $total_words = 0;
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab9">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table text-center table-vcenter text-nowrap table-bordered border-bottom" id="files-tables">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0 text-center w-5">No</th>
-                                        <th class="border-bottom-0">File Name</th>
-                                        <th class="border-bottom-0">Download File</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($Research_Order->tasks as $task)
-                                    @forelse($task->submit_info as $submission)
-                                    <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <a href="{{ asset($submission->task_file_path) }}" target="_blank" download class="font-weight-semibold fs-14 mt-5">{{ $submission->File_Name }}
-                                                <span class="text-muted ms-2">(23 KB)</span></a>
-                                            <div class="clearfix"></div>
-                                            <small class="text-muted">{{ $submission->created_at }} -
-                                                Submitted
-                                                By
-                                                {{ $submission->submitted->basic_info->full_name }}</small>
-                                        </td>
-
-                                        <td>
-                                            <div class="d-flex justify-content-center">
-                                                <a href="{{ asset($submission->task_file_path) }}" class="action-btns1" data-bs-toggle="tooltip" data-bs-placement="top" title="Download" download target="_blank"><i class="feather feather-download   text-success"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    @endforelse
-                                    @empty
-                                    <tr>
-                                        <td colspan="3">Files are Not Attached</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+               
             </div>
         </div>
         <div class="chatbox mt-lg-5" id="chatmodel">
@@ -5367,7 +5195,7 @@ $total_words = 0;
 <div class="modal fade" id="EditRevision">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-             <form action="{{route('Update.Revision.Order')}}" method="POST" class="needs-validation was-validated" enctype="multipart/form-data">
+            <form action="{{route('Update.Revision.Order')}}" method="POST" class="needs-validation was-validated" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Revision Deatils</h5>
@@ -5375,7 +5203,7 @@ $total_words = 0;
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-               <div class="modal-body">
+                <div class="modal-body">
                     <div class="row">
                         <input type="hidden" name="Revision_id" value="" id="Edit_Revision_ID">
                         <input type="hidden" name="Order_ID" id="Edit_Revision_Order_ID" value="">
@@ -5428,7 +5256,7 @@ $total_words = 0;
                                     <tr>
                                         <th class="border-bottom-0 text-center w-5">No</th>
                                         <th class="border-bottom-0">File Name</th>
-                                 
+
                                         <th class="border-bottom-0">Download File</th>
                                         <th class="border-bottom-0">Delete File</th>
                                     </tr>
@@ -5451,7 +5279,3 @@ $total_words = 0;
 </div>
 
 @include('partials.research-order-custom-script');
-
-
-
-

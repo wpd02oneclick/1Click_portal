@@ -975,67 +975,9 @@
                             <th class="wd-25p border-bottom-0">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                     <tbody>
 
-                        @php
-                        //dd($WriterPreviousOrder->toArray());
-                        @endphp
-                        @forelse($WriterPreviousOrder as $Order)
-                        @foreach($Order['tasks'] as $task)
-                        <tr>
-                            <td>{{ $loop->parent->iteration }}</td>
-                            <td>
-                                <div class="d-flex">
-                                    <div class="me-3 mt-0 mt-sm-2 d-block">
-                                        <h6 class="mb-1 fs-16">
-                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
-                                                {{ $Order['Order_ID'] }}
-                                            </a>
-                                        </h6>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ $task['Assign_Words'] }}</td>
-                            <td>
-                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
-                            </td>
-                            <td>
-
-
-                                {{ $task['Task_Status'] }} <!-- Display the actual value for debugging -->
-
-                            </td>
-
-                        </tr>
-                        @endforeach
-                        @empty
-                        <tr>
-                            <td colspan="5">
-                                <div class="d-flex justify-content-center">
-                                    <div class="me-3 mt-0 mt-sm-2 d-block">
-                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane p-3 active" id="tab6">
-                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-2">
-                    <thead>
-                        <tr>
-                            <th class="wd-10p border-bottom-0">S.No</th>
-                            <th class="wd-10p border-bottom-0">Order Code</th>
-                            <th class="w-15p border-bottom-0">Words Count</th>
-                            <th class="wd-20p border-bottom-0">Deadline</th>
-                            <th class="wd-25p border-bottom-0">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>                  
-
-                        @forelse($ContentTodayAll as $Order)
+                        @forelse($ContentAllPrevious as $Order)
                         @php
                         $ContentWriterData = PortalHelpers::getContentWriterData($Order['id'])
                         @endphp
@@ -1052,23 +994,85 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ $ContentWriterData['word_Count'] }}</td>
+                            <td>{{$ContentWriterData['Word_Count']}}</td>
                             <td>
-                                @if(isset($Order['DeadLine']))
-                                {{ $Order['DeadLine'] }} <span class="text-danger">(Deadline)</span>
-                                @elseif(isset($Order['F_DeadLine']))
-                                {{ $Order['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
-                                @elseif(isset($Order['S_DeadLine']))
-                                {{ $Order['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
-                                @elseif(isset($Order['T_DeadLine']))
-                                {{ $Order['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @if(isset($Order['submission_info']['DeadLine']))
+                                {{ $Order['submission_info']['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['submission_info']['F_DeadLine']))
+                                {{ $Order['submission_info']['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['submission_info']['S_DeadLine']))
+                                {{ $Order['submission_info']['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['submission_info']['T_DeadLine']))
+                                {{ $Order['submission_info']['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
                                 @else
-                                
                                 No Deadline
                                 @endif
                             </td>
                             <td>
-                                {{ $ContentWriterData['Order_Status'] }}
+                                {{$ContentWriterData['Order_Status']}}
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">Orders are Not Found!</h6>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane p-3 active" id="tab6">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-2">
+                    <thead>
+                        <tr>
+                            <th class="wd-10p border-bottom-0">S.No</th>
+                            <th class="wd-10p border-bottom-0">Order Code</th>
+                            <th class="w-15p border-bottom-0">Words Count</th>
+                            <th class="wd-20p border-bottom-0">Deadline</th>
+                            <th class="wd-25p border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @forelse($ContentAllToday as $Order)
+                        @php
+                        $ContentWriterData = PortalHelpers::getContentWriterData($Order['id'])
+                        @endphp
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="me-3 mt-0 mt-sm-2 d-block">
+                                        <h6 class="mb-1 fs-16">
+                                            <a href="{{ route('Content.Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                                {{ $Order['Order_ID'] }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{$ContentWriterData['Word_Count']}}</td>
+                            <td>
+                                @if(isset($Order['submission_info']['DeadLine']))
+                                {{ $Order['submission_info']['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['submission_info']['F_DeadLine']))
+                                {{ $Order['submission_info']['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['submission_info']['S_DeadLine']))
+                                {{ $Order['submission_info']['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['submission_info']['T_DeadLine']))
+                                {{ $Order['submission_info']['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @else
+                                No Deadline
+                                @endif
+                            </td>
+                            <td>
+                                {{$ContentWriterData['Order_Status']}}
                             </td>
                         </tr>
                         @empty
@@ -1087,7 +1091,7 @@
                 </table>
             </div>
             <div class="tab-pane p-3" id="tab7">
-                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-1">
+                <table class="table table-vcenter text-nowrap border-top dead-line-orders mb-0" id="DataTable-2">
                     <thead>
                         <tr>
                             <th class="wd-10p border-bottom-0">S.No</th>
@@ -1099,33 +1103,41 @@
                     </thead>
                     <tbody>
 
+                        @forelse($ContentAllTowmorrow as $Order)
                         @php
-                        //dd($WriterTodayOrder->toArray());
+                        $ContentWriterData = PortalHelpers::getContentWriterData($Order['id'])
                         @endphp
-                        @forelse($WriterTomorrowOrder as $Order)
-                        @foreach($Order['tasks'] as $task)
                         <tr>
-                            <td>{{ $loop->parent->iteration }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>
                                 <div class="d-flex">
                                     <div class="me-3 mt-0 mt-sm-2 d-block">
                                         <h6 class="mb-1 fs-16">
-                                            <a href="{{ route('Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
+                                            <a href="{{ route('Content.Order.Details', ['Order_ID' => $Order['Order_ID']]) }}">
                                                 {{ $Order['Order_ID'] }}
                                             </a>
                                         </h6>
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ $task['Assign_Words'] }}</td>
+                            <td>{{$ContentWriterData['Word_Count']}}</td>
                             <td>
-                                {{ $task['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @if(isset($Order['submission_info']['DeadLine']))
+                                {{ $Order['submission_info']['DeadLine'] }} <span class="text-danger">(Deadline)</span>
+                                @elseif(isset($Order['submission_info']['F_DeadLine']))
+                                {{ $Order['submission_info']['F_DeadLine'] }} <span class="text-danger">(First Draft)</span>
+                                @elseif(isset($Order['submission_info']['S_DeadLine']))
+                                {{ $Order['submission_info']['S_DeadLine'] }} <span class="text-danger">(Second Draft)</span>
+                                @elseif(isset($Order['submission_info']['T_DeadLine']))
+                                {{ $Order['submission_info']['T_DeadLine'] }} <span class="text-danger">(Third Draft)</span>
+                                @else
+                                No Deadline
+                                @endif
                             </td>
                             <td>
-                                {{$task['Task_Status']}}
+                                {{$ContentWriterData['Order_Status']}}
                             </td>
                         </tr>
-                        @endforeach
                         @empty
                         <tr>
                             <td colspan="5">
@@ -1137,6 +1149,7 @@
                             </td>
                         </tr>
                         @endforelse
+
                     </tbody>
                 </table>
             </div>
